@@ -9,6 +9,8 @@ void createaleak() {
   printf("Allocated leaking string: %s", foo);
 }
 
+void askMap();
+
 int main() {
   printf("*****************\nWelcome to DSA!\n*****************\n");
 
@@ -17,10 +19,17 @@ int main() {
   printf("Hola, esto es un otro cambio desde github");
   printf("holi");
   printf("hellou");
-  printf("Hi man")
+  printf("Hi man");
+  askmap();
   
   // uncomment and run "make v" to see how valgrind detects memory leaks
   // createaleak();
 
   return 0;
+}
+
+void askMap() {
+  char[] pepe;
+  scanf("Enter map name: %c", pepe);
+  printf("%c", pepe);
 }
