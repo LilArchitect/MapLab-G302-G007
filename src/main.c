@@ -17,6 +17,7 @@ int main() {
   printf("Hola, esto es un otro cambio desde github");
   printf("holi");
   printf("hellou");
+  printf("Hi man")
   
   // uncomment and run "make v" to see how valgrind detects memory leaks
   // createaleak();
