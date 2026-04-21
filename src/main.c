@@ -12,8 +12,21 @@ const char *valid_maps[] = {
   "xs_1", "xs_2", "md_1", "lg_1", "xl_1", "2xl_1"
 };
 
+typedef struct House{
+
+  char street[128];
+  int number;
+  float latitude;
+  float longitude;
+  struct House *next;
+
+} House;
+
+
+
 char* getMapName(void);
 int getOption(void);
+void Address();
 
 
 int main() {
@@ -29,6 +42,7 @@ int main() {
   {
   case 1:
     /* code */
+    Address(mapName);
     break;
   case 2:
     printf("Not implemented yet\n");
@@ -54,6 +68,7 @@ int getOption() {
 
     if(!strcmp(option, "address")) {
       opt_value = 1;
+
     } else if (!strcmp(option, "coordinate")){
       opt_value = 2;
     } else if (!strcmp(option, "place")) {
@@ -93,4 +108,42 @@ char* getMapName() {
   } while (!is_valid);
   
   return map_name;
+}
+
+
+void Address(char* mapName){
+  char street[128];
+  int number;
+
+  House* result = NULL;
+
+  do{
+    printf("Enter street name (e.g. Carrer de Roc Boronat):\n");
+    scanf("%[^\n]", street);   // allows blank spaces
+    printf("Enter street number (e.g. 138):\n ");
+    scanf("%d", &number);
+    House* result = find_coordinates(street, number, mapName);
+  }
+  while(result == NULL);
+
+
+
+
+
+
+
+  
+}
+
+House* find_coordinates(char* street, int number, char* mapName){
+  
+  char filename[64];
+  sprintf(filename, "%s/houses.txt", mapName);
+
+  FILE *file = fopen(filename, "r");
+
+
+
+
+
 }
