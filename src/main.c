@@ -26,7 +26,8 @@ typedef struct House{
 
 char* getMapName(void);
 int getOption(void);
-void Address();
+void Address(char* mapName);
+House* find_coordinates(char* street, int number, char* mapName);
 
 
 int main() {
@@ -91,7 +92,7 @@ char* getMapName() {
   // Asks for a map and compares it with the list of valid maps.
   do {
     
-    char *map_name = getString(8, "Enter map name (xs_1/xs_2/md_1/lg_1/xl_1/2xl_1): ");
+    map_name = getString(8, "Enter map name (xs_1/xs_2/md_1/lg_1/xl_1/2xl_1): ");
     printf("%s\n", map_name);
     // Will be optimized.
     for (int i = 0; i < MAPS_SIZE; i++) {
@@ -118,14 +119,18 @@ void Address(char* mapName){
   House* result = NULL;
 
   do{
-    printf("Enter street name (e.g. Carrer de Roc Boronat):\n");
-    scanf("%[^\n]", street);   // allows blank spaces
-    printf("Enter street number (e.g. 138):\n ");
+    printf("Enter street name (e.g. Carrer de Roc Boronat): \n");
+    scanf(" %[^\n]", street);   // allows blank spaces
+    printf("%s\n", street);
+    printf("Enter street number (e.g. 138): \n");
     scanf("%d", &number);
-    House* result = find_coordinates(street, number, mapName);
+    printf("%d\n", number);
+    getchar();
+    result = find_coordinates(street, number, mapName);
   }
   while(result == NULL);
 
+  printf("%lf, %lf", result->latitude, result->longitude);
 
 
 
@@ -137,13 +142,30 @@ void Address(char* mapName){
 
 House* find_coordinates(char* street, int number, char* mapName){
   
+  House* house = malloc(sizeof(House));
+  if (house == NULL) return NULL;
+  
   char filename[64];
-  sprintf(filename, "%s/houses.txt", mapName);
+  sprintf(filename, "../maps/%s/houses.txt", mapName);
+  printf("Filename: %s\n", filename);
 
-  FILE *file = fopen(filename, "r");
+  FILE *file = fopen(filename, "r");  
 
-
-
-
-
+  if(file == NULL) {
+    free(house);
+    return NULL;
+  }
+  
+  while(fscanf(file, "%128[^,],%d,%f,%f", house->street, &house->number, &house->latitude, &house->longitude) == 4){
+    //printf("Buscando: '%s' %d \n Archivo: '%s' %d\n", street, number, house->street, house->number);
+    if(strstr(house->street, street) != NULL && house->number == number) {
+      printf("Encontrado: '%s' %d \n", house->street, house->number);
+      fclose(file);
+      return house;
+    }
+  }
+  
+  fclose(file);
+  free(house);
+  return NULL;
 }
