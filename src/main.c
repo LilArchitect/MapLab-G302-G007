@@ -6,6 +6,7 @@
 #include <string.h>
 #include "utils.h"
 #include <ctype.h>
+#include "structures.h"
 #define MAPS_SIZE 6 // Define the size of the maps array
 #define SIZE 128
 
@@ -14,32 +15,7 @@ const char *valid_maps[] = {
   "xs_1", "xs_2", "md_1", "lg_1", "xl_1", "2xl_1"
 };
 
-typedef struct House{
-
-  char street[SIZE];
-  int number;
-  float latitude;
-  float longitude;
-  struct House *next;
-
-} House;
-
-typedef struct Place {
-  char id[SIZE];
-  char name[SIZE];
-  char type[SIZE];
-  float latitude;
-  float longitude;
-  struct Place *next;
-} Place;
-
-typedef enum {
-    TYPE_UNKNOWN = 0,
-    TYPE_STREET,
-    TYPE_AVENUE,
-    TYPE_PASSAGE
-} StreetType;
-
+// Function to remove " "
 static void ltrim(char *s) {
     while (*s == ' ') {
         memmove(s, s + 1, strlen(s));
@@ -48,7 +24,7 @@ static void ltrim(char *s) {
 
 static StreetType get_type_and_strip_prefix(char *s) {
     ltrim(s);
-
+    // Street
     if (strncmp(s, "carrer ", 7) == 0 ||
         strncmp(s, "calle ", 6)  == 0 ||
         strncmp(s, "c/ ", 3)     == 0 ||
@@ -65,7 +41,7 @@ static StreetType get_type_and_strip_prefix(char *s) {
         ltrim(s);
         return TYPE_STREET;
     }
-
+    // Avenue
     if (strncmp(s, "avinguda ", 9) == 0 ||
         strncmp(s, "avenida ", 8)  == 0 ||
         strncmp(s, "av. ", 4)      == 0 ||
@@ -85,7 +61,7 @@ static StreetType get_type_and_strip_prefix(char *s) {
         ltrim(s);
         return TYPE_AVENUE;
     }
-
+    // Passage
     if (strncmp(s, "passatge ", 9) == 0 ||
         strncmp(s, "pasaje ", 7)   == 0 ||
         strncmp(s, "psg. ", 5)     == 0) {
@@ -101,10 +77,10 @@ static StreetType get_type_and_strip_prefix(char *s) {
         ltrim(s);
         return TYPE_PASSAGE;
     }
-
+    // Other cases
     return TYPE_UNKNOWN;
 }
-
+// Functions
 char* get_map_name(void);
 int get_option(void);
 void address(char* mapName);
@@ -113,6 +89,7 @@ Place* load_places(char* mapName);
 Place* find_place(Place *head, char *name);
 void place(char *mapName);
 void normalize(char *str);
+//
 
 int main() {
   printf("*****************\nWelcome to DSA!\n*****************\n");
@@ -122,12 +99,11 @@ int main() {
   printf("%s", mapName);
 
   int option = get_option();
-
+  // Different cases
   switch (option)
   {
   case 1:
-    /* code */
-    address(mapName);
+    address(mapName); 
     break;
   case 2:
     printf("Not implemented yet\n");
