@@ -149,10 +149,14 @@ House* find_coordinates(char* street, int number, char* mapName){
   
   House* house = malloc(sizeof(House));
   if (house == NULL) return NULL;
-  
+  int found = 0;
   char filename[64];
   sprintf(filename, "../maps/%s/houses.txt", mapName);
   //printf("Filename: %s\n", filename);
+
+  int *numeros = NULL;
+  int size = 0;
+  int capacity = 0;
 
   FILE *file = fopen(filename, "r");  
 
@@ -167,13 +171,28 @@ House* find_coordinates(char* street, int number, char* mapName){
       house->street[i] = tolower((unsigned char)house->street[i]);
     }
     //printf("%s", street);
-    if(strstr(house->street, street) != NULL && house->number == number) {
-      printf("Encontrado: '%s' %d \n", house->street, house->number);
-      fclose(file);
-      return house;
+    if(strstr(house->street, street) != NULL) {
+      found = 1;
+      if (house->number == number) {
+        printf("Encontrado: '%s' %d \n", house->street, house->number);
+        fclose(file);
+        return house;
+      }
+      if (size >= capacity) {
+        capacity = capacity ? capacity * 2 : 4; // If capacity has a value != 0, it doubles the capacidad, else capacity = 4
+        numeros = realloc(numeros, capacity * sizeof(int));
+      }
+      numeros[size++] = house->number; // Stores numbers of the addres if the introduced one is not found.
     }
   }
   
+  if (found) {
+    printf("Indtroduced number was not found, avaliavle ones are the following: ");
+    for (int i = 0; i < size; i++) {
+      printf("%d, ", numeros[i]);
+    }
+  }
+
   fclose(file);
   free(house);
   return NULL;
