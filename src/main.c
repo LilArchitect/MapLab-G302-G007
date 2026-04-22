@@ -164,7 +164,7 @@ House* find_coordinates(char* street, int number, char* mapName){
     free(house);
     return NULL;
   }
-  
+
   while(fscanf(file, "%128[^,],%d,%f,%f", house->street, &house->number, &house->latitude, &house->longitude) == 4){
     //printf("Buscando: '%s' %d \n Archivo: '%s' %d\n", street, number, house->street, house->number);
     for(int i = 0; i < strlen(house->street); i++){
@@ -187,10 +187,23 @@ House* find_coordinates(char* street, int number, char* mapName){
   }
   
   if (found) {
-    printf("Indtroduced number was not found, avaliavle ones are the following: ");
-    for (int i = 0; i < size; i++) {
-      printf("%d, ", numeros[i]);
+    int pos_num = 0;
+    bubble_sort(numeros, size);
+    do{
+      printf("Introduced number was not found, avaliable ones are the following: ");
+      for (int i = 0; i < size; i++) {
+        printf("%d, ", numeros[i]);
+      }
+      printf("\n");
+      printf("Try another number: \n");
+      scanf("%d", &number);
+      for(int i = 0; i < size; i++){
+        if(number == numeros[i]) pos_num = 1;
+      }
+      return find_coordinates(street, number, mapName);
     }
+    while(pos_num == 0);
+
   }
 
   fclose(file);
