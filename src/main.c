@@ -24,6 +24,15 @@ typedef struct House{
 
 } House;
 
+typedef struct Place {
+  char id[SIZE];
+  char name[SIZE];
+  char type[SIZE];
+  float latitude;
+  float longitude;
+  struct Place *next;
+} Place;
+
 typedef enum {
     TYPE_UNKNOWN = 0,
     TYPE_STREET,
@@ -139,7 +148,7 @@ int get_option() {
   char *option = NULL;
   int opt_value = -1;
   do {
-    char *option = get_string(16, "How do you want to input the origin position? (address/coordinate/place): ");
+    option = get_string(16, "How do you want to input the origin position? (address/coordinate/place): ");
     printf("%s\n",option);
 
     if(!strcmp(option, "address")) {
@@ -215,7 +224,7 @@ House* find_coordinates(char* street, int number, char* mapName){
   House* house = malloc(sizeof(House));
   if (house == NULL) return NULL;
 
-  char streetNorm[STREET_SIZE];
+  char streetNorm[SIZE];
   strncpy(streetNorm, street, sizeof(streetNorm) - 1);
   streetNorm[sizeof(streetNorm) - 1] = '\0';
 
@@ -223,7 +232,7 @@ House* find_coordinates(char* street, int number, char* mapName){
 
   int found = 0;
   char filename[64];
-  sprintf(filename, "../maps/%s/houses.txt", mapName);
+  sprintf(filename, "maps/%s/houses.txt", mapName);
 
   int *numeros = NULL;
   int size = 0;
@@ -239,11 +248,11 @@ House* find_coordinates(char* street, int number, char* mapName){
               house->street, &house->number,
               &house->latitude, &house->longitude) == 4) {
                 
-    for (int i = 0; i < strlen(house->street); i++) {
+    for (size_t i = 0; i < strlen(house->street); i++) {
       house->street[i] = tolower((unsigned char)house->street[i]);
     }
 
-    char houseNorm[STREET_SIZE];
+    char houseNorm[SIZE];
     strncpy(houseNorm, house->street, sizeof(houseNorm) - 1);
     houseNorm[sizeof(houseNorm) - 1] = '\0';
 
@@ -254,7 +263,7 @@ House* find_coordinates(char* street, int number, char* mapName){
       continue;
     }
 
-    if (strstr(houseNorm, streetNorm) != NULL) {
+    if (strcmp(houseNorm, streetNorm) == 0) {
       found = 1;
 
       if (house->number == number) {
@@ -275,6 +284,15 @@ House* find_coordinates(char* street, int number, char* mapName){
   if (found) {
     int pos_num = 0;
     bubble_sort(numeros, size);
+    
+    int unique_size = 1;
+    for (int i = 1; i < size; i++) {
+      if (numeros[i] != numeros[i - 1]) {
+        numeros[unique_size++] = numeros[i];
+      }
+    }
+    size = unique_size;
+    
     do{
       printf("Introduced number was not found, avaliable ones are the following: ");
       for (int i = 0; i < size; i++) {
@@ -308,7 +326,7 @@ House* find_coordinates(char* street, int number, char* mapName){
 
 Place* load_places(char* mapName){
   char filename[SIZE];
-  sprintf(filename, "../maps/%s/places.txt", mapName);
+  sprintf(filename, "maps/%s/places.txt", mapName);
   
   FILE* file = fopen(filename, "r");
   if(file == NULL) return NULL;
