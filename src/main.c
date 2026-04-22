@@ -273,8 +273,28 @@ House* find_coordinates(char* street, int number, char* mapName){
         capacity = capacity ? capacity * 2 : 4;
         numeros = realloc(numeros, capacity * sizeof(int));
       }
-      numeros[size++] = house->number;
+      numeros[size++] = house->number; // Stores numbers of the addres if the introduced one is not found.
     }
+  }
+  
+  if (found) {
+    int pos_num = 0;
+    bubble_sort(numeros, size);
+    do{
+      printf("Introduced number was not found, avaliable ones are the following: ");
+      for (int i = 0; i < size; i++) {
+        printf("%d, ", numeros[i]);
+      }
+      printf("\n");
+      printf("Try another number: \n");
+      scanf("%d", &number);
+      for(int i = 0; i < size; i++){
+        if(number == numeros[i]) pos_num = 1;
+      }
+      return find_coordinates(street, number, mapName);
+    }
+    while(pos_num == 0);
+
   }
 
   if (found) {
