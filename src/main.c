@@ -24,9 +24,9 @@ typedef struct House{
 
 
 
-char* getMapName(void);
-int getOption(void);
-void Address(char* mapName);
+char* get_map_name(void);
+int get_option(void);
+void address(char* mapName);
 House* find_coordinates(char* street, int number, char* mapName);
 
 
@@ -34,16 +34,16 @@ int main() {
   printf("*****************\nWelcome to DSA!\n*****************\n");
 
   
-  char* mapName = getMapName();
+  char* mapName = get_map_name();
   printf("%s", mapName);
 
-  int option = getOption();
+  int option = get_option();
 
   switch (option)
   {
   case 1:
     /* code */
-    Address(mapName);
+    address(mapName);
     break;
   case 2:
     printf("Not implemented yet\n");
@@ -60,11 +60,11 @@ int main() {
   return 0;
 }
 
-int getOption() {
+int get_option() {
   char *option = NULL;
   int opt_value = -1;
   do {
-    char *option = getString(16, "How do you want to input the origin position? (address/coordinate/place): ");
+    char *option = get_string(16, "How do you want to input the origin position? (address/coordinate/place): ");
     printf("%s\n",option);
 
     if(!strcmp(option, "address")) {
@@ -86,13 +86,13 @@ int getOption() {
   return opt_value;
 }
 
-char* getMapName() {
+char* get_map_name() {
   char *map_name = NULL;
   int is_valid = 0;
   // Asks for a map and compares it with the list of valid maps.
   do {
     
-    map_name = getString(8, "Enter map name (xs_1/xs_2/md_1/lg_1/xl_1/2xl_1): ");
+    map_name = get_string(8, "Enter map name (xs_1/xs_2/md_1/lg_1/xl_1/2xl_1): ");
     printf("%s\n", map_name);
     // Will be optimized.
     for (int i = 0; i < MAPS_SIZE; i++) {
@@ -112,7 +112,7 @@ char* getMapName() {
 }
 
 
-void Address(char* mapName){
+void address(char* mapName){
   char street[128];
   int number;
 

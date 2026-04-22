@@ -3,7 +3,7 @@
 
 
 // Asks the user for a string
-char* getString(int size, const char *msg) {
+char* get_string(int size, const char *msg) {
     char *str = malloc(size * sizeof(char));
     if (str == NULL) return NULL;
 
