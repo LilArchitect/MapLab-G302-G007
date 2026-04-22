@@ -5,7 +5,9 @@
 #include <sys/stat.h>
 #include <string.h>
 #include "utils.h"
+#include <ctype.h>
 #define MAPS_SIZE 6 // Define the size of the maps array
+#define STREET_SIZE 128
 
 // Array of the valid types of maps.
 const char *valid_maps[] = {
@@ -14,7 +16,7 @@ const char *valid_maps[] = {
 
 typedef struct House{
 
-  char street[128];
+  char street[STREET_SIZE];
   int number;
   float latitude;
   float longitude;
@@ -113,7 +115,7 @@ char* get_map_name() {
 
 
 void address(char* mapName){
-  char street[128];
+  char street[STREET_SIZE];
   int number;
 
   House* result = NULL;
@@ -121,6 +123,9 @@ void address(char* mapName){
   do{
     printf("Enter street name (e.g. Carrer de Roc Boronat): \n");
     scanf(" %[^\n]", street);   // allows blank spaces
+    for(int i = 0; i < strlen(street); i++){
+      street[i] = tolower((unsigned char)street[i]);
+    }
     printf("%s\n", street);
     printf("Enter street number (e.g. 138): \n");
     scanf("%d", &number);
@@ -147,7 +152,7 @@ House* find_coordinates(char* street, int number, char* mapName){
   
   char filename[64];
   sprintf(filename, "../maps/%s/houses.txt", mapName);
-  printf("Filename: %s\n", filename);
+  //printf("Filename: %s\n", filename);
 
   FILE *file = fopen(filename, "r");  
 
@@ -158,6 +163,10 @@ House* find_coordinates(char* street, int number, char* mapName){
   
   while(fscanf(file, "%128[^,],%d,%f,%f", house->street, &house->number, &house->latitude, &house->longitude) == 4){
     //printf("Buscando: '%s' %d \n Archivo: '%s' %d\n", street, number, house->street, house->number);
+    for(int i = 0; i < strlen(house->street); i++){
+      house->street[i] = tolower((unsigned char)house->street[i]);
+    }
+    //printf("%s", street);
     if(strstr(house->street, street) != NULL && house->number == number) {
       printf("Encontrado: '%s' %d \n", house->street, house->number);
       fclose(file);
