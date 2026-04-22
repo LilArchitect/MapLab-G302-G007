@@ -7,7 +7,7 @@
 #include "utils.h"
 #include <ctype.h>
 #define MAPS_SIZE 6 // Define the size of the maps array
-#define STREET_SIZE 128
+#define SIZE 128
 
 // Array of the valid types of maps.
 const char *valid_maps[] = {
@@ -16,7 +16,7 @@ const char *valid_maps[] = {
 
 typedef struct House{
 
-  char street[STREET_SIZE];
+  char street[SIZE];
   int number;
   float latitude;
   float longitude;
@@ -24,13 +24,24 @@ typedef struct House{
 
 } House;
 
+typedef struct Place {
+    char id[SIZE];
+    char name[SIZE];
+    char type[SIZE];
+    float latitude;
+    float longitude;
+    struct Place *next;
+} Place;
 
 
 char* get_map_name(void);
 int get_option(void);
 void address(char* mapName);
 House* find_coordinates(char* street, int number, char* mapName);
-
+Place* load_places(char* mapName);
+Place* find_place(Place *head, char *name);
+void place(char *mapName);
+void normalize(char *str);
 
 int main() {
   printf("*****************\nWelcome to DSA!\n*****************\n");
@@ -51,7 +62,7 @@ int main() {
     printf("Not implemented yet\n");
     break;
   case 3:
-    printf("Not implemented yet\n");
+    place(mapName);
     break;
   case -1:
     printf("ERROR");
@@ -115,7 +126,7 @@ char* get_map_name() {
 
 
 void address(char* mapName){
-  char street[STREET_SIZE];
+  char street[SIZE];
   int number;
 
   House* result = NULL;
@@ -123,9 +134,7 @@ void address(char* mapName){
   do{
     printf("Enter street name (e.g. Carrer de Roc Boronat): \n");
     scanf(" %[^\n]", street);   // allows blank spaces
-    for(int i = 0; i < strlen(street); i++){
-      street[i] = tolower((unsigned char)street[i]);
-    }
+    normalize(street);
     printf("%s\n", street);
     printf("Enter street number (e.g. 138): \n");
     scanf("%d", &number);
@@ -136,12 +145,6 @@ void address(char* mapName){
   while(result == NULL);
 
   printf("%lf, %lf", result->latitude, result->longitude);
-
-
-
-
-
-
   
 }
 
@@ -167,9 +170,7 @@ House* find_coordinates(char* street, int number, char* mapName){
   
   while(fscanf(file, "%128[^,],%d,%f,%f", house->street, &house->number, &house->latitude, &house->longitude) == 4){
     //printf("Buscando: '%s' %d \n Archivo: '%s' %d\n", street, number, house->street, house->number);
-    for(int i = 0; i < strlen(house->street); i++){
-      house->street[i] = tolower((unsigned char)house->street[i]);
-    }
+    normalize(house->street);
     //printf("%s", street);
     if(strstr(house->street, street) != NULL) {
       found = 1;
@@ -196,4 +197,93 @@ House* find_coordinates(char* street, int number, char* mapName){
   fclose(file);
   free(house);
   return NULL;
+}
+
+Place* load_places(char* mapName){
+  char filename[SIZE];
+  sprintf(filename, "../maps/%s/places.txt", mapName);
+  
+  FILE* file = fopen(filename, "r");
+  if(file == NULL) return NULL;
+
+  Place *head = NULL;
+  Place temp;
+
+  while (fscanf(file, "%128[^,],%128[^,],%128[^,],%f,%f", temp.id, temp.name, temp.type, &temp.latitude, &temp.longitude) == 5) {
+    Place *new = malloc(sizeof(Place));
+    
+    *new = temp;
+    new->next = head;
+    head = new;
+
+  }
+
+ 
+  fclose(file);
+  return head;
+
+}
+
+Place* find_place(Place *head, char *name){
+  Place *current = head;
+
+  while(current != NULL){
+    char temp[SIZE];
+    strcpy(temp, current->name);
+
+    normalize(temp);
+
+    if(strcmp(temp, name) == 0) return current;
+
+    current = current->next;
+
+  }
+  return NULL;
+
+}
+
+void place(char *mapName) {
+
+    char name[SIZE];
+
+    Place *map = load_places(mapName);
+    Place *result = NULL;
+
+    if (map == NULL) {
+        printf("Error loading places.\n");
+        return;
+    }
+
+    do {
+      printf("Enter place name (e.g. Area Tallers):\n");
+      scanf(" %[^\n]", name);
+
+        normalize(name);
+
+        result = find_place(map, name);
+
+        if (result == NULL) {
+            printf("Place not found. Try again.\n");
+        }
+
+    } while (result == NULL);
+
+    printf("Found at: ( %f, %f )\n",
+           result->latitude,
+           result->longitude);
+
+    
+    Place *temp;
+    while (map != NULL) {
+        temp = map;
+        map = map->next;
+        free(temp);
+    }
+}
+
+void normalize(char *str) {
+
+    for (int i = 0; str[i] != '\0'; i++) {
+        str[i] = tolower((unsigned char)str[i]);
+    }
 }
