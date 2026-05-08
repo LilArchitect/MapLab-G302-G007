@@ -1,3 +1,5 @@
+#ifndef STRUCTURES_H
+#define STRUCTURES_H
 #define SIZE 128
 
 
@@ -29,3 +31,5 @@ typedef enum {
     TYPE_AVENUE,
     TYPE_PASSAGE
 } StreetType;
+
+#endif
