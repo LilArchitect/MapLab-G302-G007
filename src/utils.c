@@ -34,3 +34,10 @@ void bubble_sort(int arr[], int size) {
         }
     }
 }
+
+void normalize(char *str) {
+
+    for (int i = 0; str[i] != '\0'; i++) {
+        str[i] = tolower((unsigned char)str[i]);
+    }
+}

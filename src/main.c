@@ -382,9 +382,3 @@ void place(char *mapName) {
     }
 }
 
-void normalize(char *str) {
-
-    for (int i = 0; str[i] != '\0'; i++) {
-        str[i] = tolower((unsigned char)str[i]);
-    }
-}
