@@ -210,3 +210,28 @@ House* find_coordinates(char* street, int number, char* mapName){
   free(house);
   return NULL;
 }
+
+// done but not implemented yet
+House* load_houses(char* mapName){
+  char filename[SIZE];
+  sprintf(filename, "maps/%s/houses.txt", mapName);
+  
+  FILE* file = fopen(filename, "r");
+  if(file == NULL) return NULL;
+
+  House *head = NULL;
+  House temp;
+
+  while (fscanf(file, "%128[^,],%d,%f,%f", temp.street, temp.number, &temp.latitude, &temp.longitude) == 4) {
+    House *new = malloc(sizeof(House));
+    
+    *new = temp;
+    new->next = head;
+    head = new;
+
+  }
+
+  fclose(file);
+  return head;
+
+}
