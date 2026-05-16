@@ -235,3 +235,60 @@ House* load_houses(char* mapName){
   return head;
 
 }
+
+House* find_place(House *head, char *name){
+  House *current = head;
+
+  while(current != NULL){
+    char temp[SIZE];
+    strcpy(temp, current->street);
+
+    normalize(temp);
+
+    if(strcmp(temp, name) == 0) return current;
+
+    current = current->next;
+
+  }
+  return NULL;
+
+}
+
+void house(char *mapName) {
+
+    char street[SIZE];
+
+    Place *map = load_houses(mapName);
+    Place *result = NULL;
+
+    if (map == NULL) {
+        printf("Error loading houses.\n");
+        return;
+    }
+
+    do {
+      printf("Enter street name (e.g. Carrer de Roc Boronat): \n");
+      scanf(" %[^\n]", street);
+
+        normalize(street);
+
+        result = find_place(map, street);
+
+        if (result == NULL) {
+            printf("House not found. Try again.\n");
+        }
+
+    } while (result == NULL);
+
+    printf("Found at: ( %f, %f )\n",
+           result->latitude,
+           result->longitude);
+
+    
+    House *temp;
+    while (map != NULL) {
+        temp = map;
+        map = map->next;
+        free(temp);
+    }
+}
