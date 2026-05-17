@@ -11,20 +11,20 @@
 #define MAPS_SIZE 6 // Define the size of the maps array
 #define SIZE 128
 
-static void ltrim(char *s);
-static StreetType get_type_and_strip_prefix(char *s);
-void address(char* mapName);
-House* find_coordinates(char* street, int number, char* mapName);
+//static void ltrim(char *s);
+//static StreetType get_type_and_strip_prefix(char *s);
+//void address(char* mapName);
+//House* find_coordinates(char* street, int number, char* mapName);
 
 
 // Function to remove " "
-static void ltrim(char *s) {
+/*static void ltrim(char *s) {
     while (*s == ' ') {
         memmove(s, s + 1, strlen(s));
     }
-}
+} */
 
-static StreetType get_type_and_strip_prefix(char *s) {
+/*static StreetType get_type_and_strip_prefix(char *s) {
     ltrim(s);
     // Street
     if (strncmp(s, "carrer ", 7) == 0 ||
@@ -81,8 +81,8 @@ static StreetType get_type_and_strip_prefix(char *s) {
     }
     // Other cases
     return TYPE_UNKNOWN;
-}
-
+} */
+/*
 void address(char* mapName){
   char street[SIZE];
   int number;
@@ -210,19 +210,21 @@ House* find_coordinates(char* street, int number, char* mapName){
   free(house);
   return NULL;
 }
+*/
 
 // done but not implemented yet
 House* load_houses(char* mapName){
   char filename[SIZE];
   sprintf(filename, "maps/%s/houses.txt", mapName);
-  
+  printf("Trying to open: %s\n", filename); //prueba
+
   FILE* file = fopen(filename, "r");
   if(file == NULL) return NULL;
 
   House *head = NULL;
   House temp;
 
-  while (fscanf(file, "%128[^,],%d,%f,%f", temp.street, temp.number, &temp.latitude, &temp.longitude) == 4) {
+  while (fscanf(file, " %127[^,],%d,%f,%f", temp.street, &temp.number, &temp.latitude, &temp.longitude) == 4) {
     House *new = malloc(sizeof(House));
     
     *new = temp;
@@ -236,7 +238,8 @@ House* load_houses(char* mapName){
 
 }
 
-House* find_place(House *head, char *name){
+
+House* find_house(House *head, char *name){
   House *current = head;
 
   while(current != NULL){
@@ -258,8 +261,8 @@ void house(char *mapName) {
 
     char street[SIZE];
 
-    Place *map = load_houses(mapName);
-    Place *result = NULL;
+    House *map = load_houses(mapName);
+    House *result = NULL;
 
     if (map == NULL) {
         printf("Error loading houses.\n");
@@ -272,7 +275,7 @@ void house(char *mapName) {
 
         normalize(street);
 
-        result = find_place(map, street);
+        result = find_house(map, street);
 
         if (result == NULL) {
             printf("House not found. Try again.\n");

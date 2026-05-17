@@ -38,7 +38,8 @@ int main() {
   switch (option)
   {
   case 1:
-    address(mapName); 
+    //address(mapName); 
+    house(mapName);
     break;
   case 2:
     printf("Not implemented yet\n");
