@@ -20,7 +20,7 @@ Place* load_places(char* mapName){
   Place *head = NULL;
   Place temp;
 
-  while (fscanf(file, "%128[^,],%128[^,],%128[^,],%f,%f", temp.id, temp.name, temp.type, &temp.latitude, &temp.longitude) == 5) {
+  while (fscanf(file, "%128[^,],%128[^,],%128[^,],%lf,%lf", temp.id, temp.name, temp.type, &temp.latitude, &temp.longitude) == 5) {
     Place *new = malloc(sizeof(Place));
     
     *new = temp;
@@ -79,7 +79,7 @@ void place(char *mapName) {
 
     } while (result == NULL);
 
-    printf("Found at: ( %f, %f )\n",
+    printf("Found at: ( %lf, %lf )\n",
            result->latitude,
            result->longitude);
 

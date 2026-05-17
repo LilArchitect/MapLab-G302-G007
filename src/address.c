@@ -216,7 +216,7 @@ House* find_coordinates(char* street, int number, char* mapName){
 House* load_houses(char* mapName){
   char filename[SIZE];
   sprintf(filename, "maps/%s/houses.txt", mapName);
-  printf("Trying to open: %s\n", filename); //prueba
+  //printf("Trying to open: %s\n", filename); //prueba
 
   FILE* file = fopen(filename, "r");
   if(file == NULL) return NULL;
@@ -224,7 +224,8 @@ House* load_houses(char* mapName){
   House *head = NULL;
   House temp;
 
-  while (fscanf(file, " %127[^,],%d,%f,%f", temp.street, &temp.number, &temp.latitude, &temp.longitude) == 4) {
+  while (fscanf(file, " %127[^,],%d,%lf,%lf", temp.street, &temp.number, &temp.latitude, &temp.longitude) == 4) {
+    
     House *new = malloc(sizeof(House));
     
     *new = temp;
@@ -239,59 +240,112 @@ House* load_houses(char* mapName){
 }
 
 
-House* find_house(House *head, char *name){
+House* find_house(House *head, char *name, int number){
   House *current = head;
-
+  int *doors = NULL; // array of possible numbers
+  int capacity = 0;
+  int size = 0;
+  int found = 0;
   while(current != NULL){
     char temp[SIZE];
     strcpy(temp, current->street);
 
     normalize(temp);
 
-    if(strcmp(temp, name) == 0) return current;
-
+    if(strcmp(temp, name) == 0){
+      found = 1;
+      
+      if (size >= capacity) {
+        capacity = capacity ? capacity * 2 : 4;
+        doors = realloc(doors, capacity * sizeof(int));
+      }
+      doors[size++] = current->number; // Stores numbers of the addres if the introduced one is not found.
+      if(current->number == number) {
+        free(doors);
+        return current;
+      }
+      
+    }
     current = current->next;
-
   }
-  return NULL;
+  if (found) {
+    
+    bubble_sort(doors, size);
+    
+    int unique_size = 1;
+    for (int i = 1; i < size; i++) {
+      if (doors[i] != doors[i - 1]) {
+        doors[unique_size++] = doors[i];
+      }
+    }
+    size = unique_size;
+    
+    printf("Introduced number was not found.\n");
+    printf("Available numbers are:\n");
+    for (int i = 0; i < size; i++) {
+      printf("%d ", doors[i]);
+    }
+    printf("\n");
 
+    int new_number;
+    
+    do{
+      printf("Try another number:\n");
+      scanf("%d", &new_number);
+      for(int i = 0; i < size; i++){
+        if(new_number == doors[i]){
+          free(doors);
+          return find_house(head, name, new_number);
+        }
+      }
+      printf("Invalid number.\n");
+
+    } while(1);
+  }
+
+  free(doors);
+  return NULL;
 }
+
 
 void house(char *mapName) {
 
-    char street[SIZE];
+  char street[SIZE];
+  int number;
 
-    House *map = load_houses(mapName);
-    House *result = NULL;
+  House *map = load_houses(mapName);
+  House *result = NULL;
 
-    if (map == NULL) {
-        printf("Error loading houses.\n");
-        return;
-    }
+  if (map == NULL) {
+      printf("Error loading houses.\n");
+      return;
+  }
 
-    do {
-      printf("Enter street name (e.g. Carrer de Roc Boronat): \n");
-      scanf(" %[^\n]", street);
+  do {
+    printf("Enter street name (e.g. Carrer de Roc Boronat): \n");
+    scanf(" %[^\n]", street);
+    printf("Enter street number (e.g. 138): \n");
+    scanf(" %d", &number);
+    normalize(street);
 
-        normalize(street);
+    result = find_house(map, street, number);
 
-        result = find_house(map, street);
+    if (result == NULL) {
+      printf("House not found. Try again.\n");
+      }
 
-        if (result == NULL) {
-            printf("House not found. Try again.\n");
-        }
+  } while(result == NULL);
 
-    } while (result == NULL);
+  printf("Found at: ( %lf, %lf )\n",
+         result->latitude,
+         result->longitude);
 
-    printf("Found at: ( %f, %f )\n",
-           result->latitude,
-           result->longitude);
+  House *temp;
+  while (map != NULL) {
+      temp = map;
+      map = map->next;
+      free(temp);
+  }
 
-    
-    House *temp;
-    while (map != NULL) {
-        temp = map;
-        map = map->next;
-        free(temp);
-    }
+  
 }

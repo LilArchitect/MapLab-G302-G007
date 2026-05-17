@@ -8,19 +8,20 @@ typedef struct House{
 
   char street[SIZE];
   int number;
-  float latitude;
-  float longitude;
+  double latitude;
+  double longitude;
   struct House *next;
-
 } House;
+
+
 
 // Place Struct
 typedef struct Place {
   char id[SIZE];
   char name[SIZE];
   char type[SIZE];
-  float latitude;
-  float longitude;
+  double latitude;
+  double longitude;
   struct Place *next;
 } Place;
 
