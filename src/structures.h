@@ -33,4 +33,14 @@ typedef enum {
     TYPE_PASSAGE
 } StreetType;
 
+typedef struct Street {
+    long long node1_id;
+    double lat1, lon1;
+    long long node2_id;
+    double lat2, lon2;
+    int speed;
+    char name[SIZE];
+    struct Street *next;
+} Street;
+
 #endif

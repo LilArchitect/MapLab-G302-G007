@@ -11,6 +11,8 @@
 #define MAPS_SIZE 6 // Define the size of the maps array
 #define SIZE 128
 
+#define MAX_SUGGESTIONS 5
+#define MAX_DISTANCE 5
 //static void ltrim(char *s);
 //static StreetType get_type_and_strip_prefix(char *s);
 //void address(char* mapName);
@@ -18,13 +20,13 @@
 
 
 // Function to remove " "
-/*static void ltrim(char *s) {
+static void ltrim(char *s) {
     while (*s == ' ') {
         memmove(s, s + 1, strlen(s));
     }
-} */
+}
 
-/*static StreetType get_type_and_strip_prefix(char *s) {
+static StreetType get_type_and_strip_prefix(char *s) {
     ltrim(s);
     // Street
     if (strncmp(s, "carrer ", 7) == 0 ||
@@ -81,7 +83,7 @@
     }
     // Other cases
     return TYPE_UNKNOWN;
-} */
+}
 /*
 void address(char* mapName){
   char street[SIZE];
@@ -246,13 +248,21 @@ House* find_house(House *head, char *name, int number){
   int capacity = 0;
   int size = 0;
   int found = 0;
+  
+  char nameStripped[SIZE];
+  strncpy(nameStripped, name, SIZE - 1);
+  nameStripped[SIZE - 1] = '\0';
+  normalize(nameStripped);
+  get_type_and_strip_prefix(nameStripped);
+
   while(current != NULL){
     char temp[SIZE];
     strcpy(temp, current->street);
 
     normalize(temp);
-
-    if(strcmp(temp, name) == 0){
+    get_type_and_strip_prefix(temp);
+    
+    if(strcmp(temp, nameStripped) == 0){
       found = 1;
       
       if (size >= capacity) {
@@ -303,22 +313,75 @@ House* find_house(House *head, char *name, int number){
     } while(1);
   }
 
+  char suggestions[MAX_SUGGESTIONS][SIZE];
+  int  distances[MAX_SUGGESTIONS];
+  int  sug_count = 0;
+
+  current = head;
+  while (current != NULL) {
+    char temp[SIZE];
+    strcpy(temp, current->street);
+    normalize(temp);
+    get_type_and_strip_prefix(temp);
+
+    // Evitar duplicados
+    int already = 0;
+    for (int i = 0; i < sug_count; i++) {
+        if (strcmp(suggestions[i], temp) == 0) { already = 1; break; }
+    }
+    if (already) { current = current->next; continue; }
+
+    int dist = levenshtein(nameStripped, temp);
+    if (dist <= MAX_DISTANCE) {
+        if (sug_count < MAX_SUGGESTIONS) {
+            strcpy(suggestions[sug_count], temp);
+            distances[sug_count] = dist;
+            sug_count++;
+        } else {
+            // Reemplazar la peor sugerencia si esta es mejor
+            int worst = 0;
+            for (int i = 1; i < MAX_SUGGESTIONS; i++)
+                if (distances[i] > distances[worst]) worst = i;
+            if (dist < distances[worst]) {
+                strcpy(suggestions[worst], temp);
+                distances[worst] = dist;
+            }
+        }
+    }
+    current = current->next;
+  }
+
+  if (sug_count > 0) {
+    printf("Street not found. Did you mean:\n");
+    for (int i = 0; i < sug_count; i++)
+        printf("  %d. %s\n", i + 1, suggestions[i]);
+
+    int choice;
+    do {
+        printf("Choose (1-%d) or 0 to cancel: \n", sug_count);
+        scanf("%d", &choice);
+    } while (choice < 0 || choice > sug_count);
+
+    if (choice > 0) {
+        free(doors);
+        return find_house(head, suggestions[choice - 1], number);
+    }
+  }
+
   free(doors);
   return NULL;
 }
 
 
-void house(char *mapName) {
+House* house(House *head) {
 
   char street[SIZE];
   int number;
-
-  House *map = load_houses(mapName);
   House *result = NULL;
 
-  if (map == NULL) {
+  if (head == NULL) {
       printf("Error loading houses.\n");
-      return;
+      return NULL;
   }
 
   do {
@@ -328,7 +391,7 @@ void house(char *mapName) {
     scanf(" %d", &number);
     normalize(street);
 
-    result = find_house(map, street, number);
+    result = find_house(head, street, number);
 
     if (result == NULL) {
       printf("House not found. Try again.\n");
@@ -336,16 +399,14 @@ void house(char *mapName) {
 
   } while(result == NULL);
 
-  printf("Found at: ( %lf, %lf )\n",
-         result->latitude,
-         result->longitude);
+  return result;
+}
 
+void free_houses(House *head) {
   House *temp;
-  while (map != NULL) {
-      temp = map;
-      map = map->next;
-      free(temp);
+  while (head != NULL) {
+    temp = head;
+    head = head->next;
+    free(temp);
   }
-
-  
 }
