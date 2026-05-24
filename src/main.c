@@ -64,6 +64,12 @@ int main()
     Street *street = coordinates(streets, lat, lon);
     printf("Street found: %s\n", street->name);
     printf("Street segment: %6f, %6f to %6f, %6f\n",street->lat1, street->lon1, street->lat2, street->lon2);
+    printf("    Closest street: %s\n", street->name);
+    printf("    Between %lld (%.6f, %.6f) and %lld (%.6f, %.6f)\n\n",
+               street->node1_id, street->lat1, street->lon1,
+               street->node2_id, street->lat2, street->lon2);
+        
+    find_connected_streets(streets, street);
     break;
   case 3:
   {
@@ -78,7 +84,7 @@ int main()
     break;
   }
 
-  if (option == 1 || option == 2 || option == 3)
+  if (option == 1 || option == 3)
   {
     //printf("DEBUG: Entered option 1 and 3 if\n");  
     if (streets == NULL) {
@@ -100,7 +106,6 @@ int main()
       }
     }
   }
-
   //printf("DEBUG: About to free all arrays\n");  
   free_houses(houses);
   free_places(places);
