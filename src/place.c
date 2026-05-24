@@ -13,6 +13,24 @@
 #define MAX_SUGGESTIONS 5
 #define MAX_DISTANCE 5
 
+static void replace_em_dash(char *s) {
+    char result[SIZE];
+    int j = 0;
+    for (int i = 0; s[i] != '\0'; ) {
+        // Guion largo UTF-8: E2 80 93
+        if ((unsigned char)s[i] == 0xE2 &&
+            (unsigned char)s[i+1] == 0x80 &&
+            (unsigned char)s[i+2] == 0x93) {
+            result[j++] = '-';
+            i += 3;
+        } else {
+            result[j++] = s[i++];
+        }
+    }
+    result[j] = '\0';
+    strcpy(s, result);
+}
+
 Place *load_places(char *mapName)
 {
   char filename[SIZE];
@@ -27,6 +45,7 @@ Place *load_places(char *mapName)
 
   while (fscanf(file, "%128[^,],%128[^,],%128[^,],%lf,%lf", temp.id, temp.name, temp.type, &temp.latitude, &temp.longitude) == 5)
   {
+    replace_em_dash(temp.name);
     Place *new = malloc(sizeof(Place));
 
     *new = temp;
@@ -58,9 +77,10 @@ Place *find_place(Place *head, char *name)
     normalize(temp);
     get_type_and_strip_prefix(temp);
 
+    printf("DEBUG comparing: [%s] vs [%s]\n", temp, name);
     if (strcmp(temp, name) == 0)
       return current;
-      
+
     // Evitar duplicados
     int already = 0;
     for (int i = 0; i < sug_count; i++) {
