@@ -21,5 +21,7 @@ double toRadians(double degree);
 double toDegrees(double radians);
 double haversine(Position posA, Position posB);
 Position midpoint(Position a, Position b);
-
+void replace_em_dash(char *s);
+Street *find_closest_street(Street *head, double user_lat, double user_lon);
+Street *coordinates(Street *street_head, double lat, double lon);
 #endif

@@ -33,7 +33,7 @@ Street* load_streets(char* mapName) {
 }
 
 void free_streets(Street *head) {
-    printf("DEBUG: Inside free_streets\n");
+    //printf("DEBUG: Inside free_streets\n");
 
     Street *temp;
     while (head != NULL) {

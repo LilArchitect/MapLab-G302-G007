@@ -7,6 +7,7 @@
 #include "utils.h"
 #include <ctype.h>
 #include "structures.h"
+
 #include "place.h"
 #include "address.h"
 #include "street.h"
@@ -53,7 +54,16 @@ int main()
     break;
   }
   case 2:
-    printf("Not implemented yet\n");
+    double lat, lon;
+    printf("Enter source coordinates:\n");
+    printf("    Enter latitude: ");
+    scanf("%lf", &lat);
+    printf("    Enter longitude: ");
+    scanf("%lf", &lon);
+
+    Street *street = coordinates(streets, lat, lon);
+    printf("Street found: %s\n", street->name);
+    printf("Street segment: %6f, %6f to %6f, %6f\n",street->lat1, street->lon1, street->lat2, street->lon2);
     break;
   case 3:
   {
@@ -68,30 +78,30 @@ int main()
     break;
   }
 
-  if (option == 1 || option == 3)
+  if (option == 1 || option == 2 || option == 3)
   {
-    printf("DEBUG: Entered option 1 and 3 if\n");  
+    //printf("DEBUG: Entered option 1 and 3 if\n");  
     if (streets == NULL) {
     printf("Error: streets not loaded.\n");
     } else {
     Street *closest = find_closest_street(streets, lat, lon);
-    printf("DEBUG: find_closest_street done\n");  
+    //printf("DEBUG: find_closest_street done\n");  
       if (closest == NULL) {
         printf("No closest street found.\n");
       } else {
-        printf("DEBUG: closest found: %s\n", closest->name);
+        //printf("DEBUG: closest found: %s\n", closest->name);
         printf("    Closest street: %s\n", closest->name);
         printf("    Between %lld (%.6f, %.6f) and %lld (%.6f, %.6f)\n\n",
                closest->node1_id, closest->lat1, closest->lon1,
                closest->node2_id, closest->lat2, closest->lon2);
-        printf("DEBUG: before find_connected\n");
+        //printf("DEBUG: before find_connected\n");
         find_connected_streets(streets, closest);
-        printf("DEBUG: after find_connected\n");
+        //printf("DEBUG: after find_connected\n");
       }
     }
   }
 
-  printf("DEBUG: About to free all arrays\n");  
+  //printf("DEBUG: About to free all arrays\n");  
   free_houses(houses);
   free_places(places);
   free_streets(streets);

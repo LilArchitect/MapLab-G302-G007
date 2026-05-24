@@ -220,4 +220,27 @@ StreetType get_type_and_strip_prefix(char *s) {
     return TYPE_UNKNOWN;
 }
 
+void replace_em_dash(char *s) {
+    char result[SIZE];
+    int j = 0;
+    for (int i = 0; s[i] != '\0'; ) {
+        // Guion largo UTF-8: E2 80 93
+        if ((unsigned char)s[i] == 0xE2 &&
+            (unsigned char)s[i+1] == 0x80 &&
+            (unsigned char)s[i+2] == 0x93) {
+            result[j++] = '-';
+            i += 3;
+        } else {
+            result[j++] = s[i++];
+        }
+    }
+    result[j] = '\0';
+    strcpy(s, result);
+}
 
+Street *coordinates(Street *street_head, double lat, double lon){
+    if (street_head == NULL) printf("Warning: no streets loaded\n");
+    Street *street;
+    street = find_closest_street(street_head,  lat,  lon);
+    return street;
+}

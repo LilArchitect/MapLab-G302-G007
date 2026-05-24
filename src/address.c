@@ -338,7 +338,7 @@ House* house(House *head) {
 }
 
 void free_houses(House *head) {
-  printf("DEBUG: Inside free_houses\n");
+  //printf("DEBUG: Inside free_houses\n");
   House *temp;
   while (head != NULL) {
     temp = head;
