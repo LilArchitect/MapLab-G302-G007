@@ -10,6 +10,24 @@
 #define MAPS_SIZE 6 // Define the size of the maps array
 #define SIZE 128
 
+static void replace_em_dash(char *s) {
+    char result[SIZE];
+    int j = 0;
+    for (int i = 0; s[i] != '\0'; ) {
+        // Guion largo UTF-8: E2 80 93
+        if ((unsigned char)s[i] == 0xE2 &&
+            (unsigned char)s[i+1] == 0x80 &&
+            (unsigned char)s[i+2] == 0x93) {
+            result[j++] = '-';
+            i += 3;
+        } else {
+            result[j++] = s[i++];
+        }
+    }
+    result[j] = '\0';
+    strcpy(s, result);
+}
+
 Place *load_places(char *mapName)
 {
   char filename[SIZE];
@@ -24,6 +42,7 @@ Place *load_places(char *mapName)
 
   while (fscanf(file, "%128[^,],%128[^,],%128[^,],%lf,%lf", temp.id, temp.name, temp.type, &temp.latitude, &temp.longitude) == 5)
   {
+    replace_em_dash(temp.name);
     Place *new = malloc(sizeof(Place));
 
     *new = temp;
@@ -45,7 +64,7 @@ Place *find_place(Place *head, char *name)
     strcpy(temp, current->name);
 
     normalize(temp);
-
+    printf("DEBUG comparing: [%s] vs [%s]\n", temp, name);
     if (strcmp(temp, name) == 0)
       return current;
 
