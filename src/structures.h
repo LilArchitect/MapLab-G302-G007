@@ -38,7 +38,7 @@ typedef struct Street {
     double lat1, lon1;
     long long node2_id;
     double lat2, lon2;
-    int speed;
+    double speed;
     char name[SIZE];
     struct Street *next;
 } Street;

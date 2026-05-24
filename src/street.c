@@ -17,7 +17,7 @@ Street* load_streets(char* mapName) {
     Street *head = NULL;
     Street temp;
 
-    while (fscanf(file, "%lld,%lf,%lf,%lld,%lf,%lf,%d,%127[^\n]",
+    while (fscanf(file, "%lld,%lf,%lf,%lld,%lf,%lf,%lf,%127[^\n]",
                   &temp.node1_id, &temp.lat1, &temp.lon1,
                   &temp.node2_id, &temp.lat2, &temp.lon2,
                   &temp.speed, temp.name) == 8) {
@@ -33,6 +33,8 @@ Street* load_streets(char* mapName) {
 }
 
 void free_streets(Street *head) {
+    printf("DEBUG: Inside free_streets\n");
+
     Street *temp;
     while (head != NULL) {
         temp = head;

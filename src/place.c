@@ -83,6 +83,8 @@ Place *place(Place *head)
 
 void free_places(Place *head)
 {
+  printf("DEBUG: Inside free_places\n");
+
   Place *temp;
   while (head != NULL)
   {
