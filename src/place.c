@@ -10,6 +10,9 @@
 #define MAPS_SIZE 6 // Define the size of the maps array
 #define SIZE 128
 
+#define MAX_SUGGESTIONS 5
+#define MAX_DISTANCE 5
+
 Place *load_places(char *mapName)
 {
   char filename[SIZE];
@@ -38,20 +41,71 @@ Place *load_places(char *mapName)
 Place *find_place(Place *head, char *name)
 {
   Place *current = head;
+  char suggestions[MAX_SUGGESTIONS][SIZE];
+  int  distances[MAX_SUGGESTIONS];
+  int  sug_count = 0;
+
+  char nameStripped[SIZE];
+  strncpy(nameStripped, name, SIZE - 1);
+  nameStripped[SIZE - 1] = '\0';
+  normalize(nameStripped);
+  get_type_and_strip_prefix(nameStripped);
 
   while (current != NULL)
   {
     char temp[SIZE];
     strcpy(temp, current->name);
-
     normalize(temp);
+    get_type_and_strip_prefix(temp);
 
     if (strcmp(temp, name) == 0)
       return current;
+      
+    // Evitar duplicados
+    int already = 0;
+    for (int i = 0; i < sug_count; i++) {
+        if (strcmp(suggestions[i], temp) == 0) { already = 1; break; }
+    }
+    if (already) { current = current->next; continue; }
+
+    int dist = levenshtein(nameStripped, temp);
+    if (dist <= MAX_DISTANCE) {
+        if (sug_count < MAX_SUGGESTIONS) {
+            strcpy(suggestions[sug_count], temp);
+            distances[sug_count] = dist;
+            sug_count++;
+        } else {
+            // Reemplazar la peor sugerencia si esta es mejor
+            int worst = 0;
+            for (int i = 1; i < MAX_SUGGESTIONS; i++)
+                if (distances[i] > distances[worst]) worst = i;
+            if (dist < distances[worst]) {
+                strcpy(suggestions[worst], temp);
+                distances[worst] = dist;
+            }
+        }
+    }
 
     current = current->next;
   }
+
+  if (sug_count > 0) {
+    printf("Place not found. Did you mean:\n");
+    for (int i = 0; i < sug_count; i++)
+        printf("  %d. %s\n", i + 1, suggestions[i]);
+
+    int choice;
+    do {
+        printf("Choose (1-%d) or 0 to cancel: \n", sug_count);
+        scanf("%d", &choice);
+    } while (choice < 0 || choice > sug_count);
+
+    if (choice > 0) {
+        return find_place(head, suggestions[choice - 1]);
+    }
+  }
   return NULL;
+
 }
 
 Place *place(Place *head)

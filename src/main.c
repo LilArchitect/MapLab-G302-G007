@@ -29,6 +29,7 @@ int main()
 
   char *mapName = get_map_name();
   // printf("%s", mapName);
+  printf("--- ORIGIN ---\n");
   double lat = 0, lon = 0;
   int option = get_option();
 

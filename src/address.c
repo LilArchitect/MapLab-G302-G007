@@ -19,71 +19,6 @@
 //House* find_coordinates(char* street, int number, char* mapName);
 
 
-// Function to remove " "
-static void ltrim(char *s) {
-    while (*s == ' ') {
-        memmove(s, s + 1, strlen(s));
-    }
-}
-
-static StreetType get_type_and_strip_prefix(char *s) {
-    ltrim(s);
-    // Street
-    if (strncmp(s, "carrer ", 7) == 0 ||
-        strncmp(s, "calle ", 6)  == 0 ||
-        strncmp(s, "c/ ", 3)     == 0 ||
-        strncmp(s, "c. ", 3)     == 0) {
-        if (strncmp(s, "carrer ", 7) == 0){
-          memmove(s, s + 7, strlen(s + 7) + 1);
-        }      
-        else if (strncmp(s, "calle ", 6) == 0) {
-          memmove(s, s + 6, strlen(s + 6) + 1);
-        }
-        else {
-          memmove(s, s + 3, strlen(s + 3) + 1);
-        }
-        ltrim(s);
-        return TYPE_STREET;
-    }
-    // Avenue
-    if (strncmp(s, "avinguda ", 9) == 0 ||
-        strncmp(s, "avenida ", 8)  == 0 ||
-        strncmp(s, "av. ", 4)      == 0 ||
-        strncmp(s, "av ", 3)       == 0) {
-        if (strncmp(s, "avinguda ", 9) == 0) {
-          memmove(s, s + 9, strlen(s + 9) + 1);
-        }
-        else if (strncmp(s, "avenida ", 8) == 0) {
-          memmove(s, s + 8, strlen(s + 8) + 1);
-        }
-        else if (strncmp(s, "av. ", 4) == 0) {
-          memmove(s, s + 4, strlen(s + 4) + 1);
-        }
-        else {
-          memmove(s, s + 3, strlen(s + 3) + 1);
-        }
-        ltrim(s);
-        return TYPE_AVENUE;
-    }
-    // Passage
-    if (strncmp(s, "passatge ", 9) == 0 ||
-        strncmp(s, "pasaje ", 7)   == 0 ||
-        strncmp(s, "psg. ", 5)     == 0) {
-        if (strncmp(s, "passatge ", 9) == 0) {
-          memmove(s, s + 9, strlen(s + 9) + 1);
-        }
-        else if (strncmp(s, "pasaje ", 7) == 0) {
-          memmove(s, s + 7, strlen(s + 7) + 1);
-        }
-        else {
-          memmove(s, s + 5, strlen(s + 5) + 1);
-        }
-        ltrim(s);
-        return TYPE_PASSAGE;
-    }
-    // Other cases
-    return TYPE_UNKNOWN;
-}
 /*
 void address(char* mapName){
   char street[SIZE];
@@ -214,7 +149,7 @@ House* find_coordinates(char* street, int number, char* mapName){
 }
 */
 
-// done but not implemented yet
+
 House* load_houses(char* mapName){
   char filename[SIZE];
   sprintf(filename, "maps/%s/houses.txt", mapName);
