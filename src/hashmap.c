@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "hashmap.h"
+#include <string.h>
 
 static int hash(long long node_id) {
     unsigned long long v = (unsigned long long)node_id;
@@ -69,15 +70,43 @@ void find_connected_streets_fast(IntersectionMap *map, Street *street) {
     printf("- %s\n", street->name);
     printf("    Which is connected to:\n");
 
-    long long nodes[2] = {street->node1_id, street->node2_id};
-    for (int i = 0; i < 2; i++) {
-        StreetNode *sn = hashmap_get(map, nodes[i]);
+    int found = 0;
+    char printed[64][SIZE];
+    int printed_count = 0;
+
+    long long search_nodes[3] = {street->node1_id, street->node2_id, -1};
+
+    // Buscar el segmento continuación: mismo nombre, node1 == nuestro node2
+    StreetNode *sn2 = hashmap_get(map, street->node2_id);
+    while (sn2 != NULL) {
+        if (strcmp(sn2->street->name, street->name) == 0 &&
+            sn2->street->node1_id == street->node2_id) {
+            search_nodes[2] = sn2->street->node2_id;
+            break;
+        }
+        sn2 = sn2->next;
+    }
+
+    for (int i = 0; i < 3; i++) {
+        if (search_nodes[i] == -1) continue;
+        StreetNode *sn = hashmap_get(map, search_nodes[i]);
         while (sn != NULL) {
-            if (sn->street != street) 
-                printf("     - %s\n", sn->street->name);
+            if (sn->street != street && strcmp(sn->street->name, street->name) != 0) {
+                int already = 0;
+                for (int j = 0; j < printed_count; j++)
+                    if (strcmp(printed[j], sn->street->name) == 0) { already = 1; break; }
+                if (!already) {
+                    printf("     - %s\n", sn->street->name);
+                    strcpy(printed[printed_count++], sn->street->name);
+                    found++;
+                }
+            }
             sn = sn->next;
         }
     }
+
+    if (found == 0)
+        printf("     (no connected streets found)\n");
 }
 
 void hashmap_free(IntersectionMap *map) {
