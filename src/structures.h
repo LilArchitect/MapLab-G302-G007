@@ -1,6 +1,8 @@
 #ifndef STRUCTURES_H
 #define STRUCTURES_H
 #define SIZE 128
+#define HASHMAP_SIZE 1024
+
 
 
 // House Struct
@@ -42,5 +44,20 @@ typedef struct Street {
     char name[SIZE];
     struct Street *next;
 } Street;
+
+typedef struct StreetNode {
+    Street *street;
+    struct StreetNode *next;
+} StreetNode;
+
+typedef struct HashEntry {
+    long long node_id;
+    StreetNode *streets;
+    struct HashEntry *next;
+} HashEntry;
+
+typedef struct {
+    HashEntry *buckets[HASHMAP_SIZE];
+} IntersectionMap;
 
 #endif
