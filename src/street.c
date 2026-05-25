@@ -51,21 +51,57 @@ void free_streets(Street *head) {
 }
 
 void find_connected_streets(Street *head, Street *closest) {
+    printf("    From this street segment, you can go to:\n");
+    printf("    - %s\n", closest->name);
+    printf("        Which is connected to:\n");
+
+    char seen[64][SIZE];
+    int seen_count = 0;
+
+    // Primero recogemos todos los nodos de los segmentos de la misma calle
+    // que toquen con el segmento más cercano
+    long long nodes[128];
+    int node_count = 0;
+    nodes[node_count++] = closest->node1_id;
+    nodes[node_count++] = closest->node2_id;
+
+    // Expandir: añadir nodos de segmentos contiguos de la misma calle
+    Street *seg = head;
+    while (seg != NULL) {
+        if (strcmp(seg->name, closest->name) == 0) {
+            for (int i = 0; i < node_count; i++) {
+                if (seg->node1_id == nodes[i] || seg->node2_id == nodes[i]) {
+                    // Añadir sus nodos si no están ya
+                    int found1 = 0, found2 = 0;
+                    for (int j = 0; j < node_count; j++) {
+                        if (nodes[j] == seg->node1_id) found1 = 1;
+                        if (nodes[j] == seg->node2_id) found2 = 1;
+                    }
+                    if (!found1 && node_count < 128) nodes[node_count++] = seg->node1_id;
+                    if (!found2 && node_count < 128) nodes[node_count++] = seg->node2_id;
+                    break;
+                }
+            }
+        }
+        seg = seg->next;
+    }
+
+    // Buscar calles conectadas a cualquiera de esos nodos
     Street *current = head;
-
-    printf("From this street segment, you can go to:\n");
-    printf("- %s\n", closest->name);
-    printf("    Which is connected to:\n");
-
     while (current != NULL) {
-        // Comparten nodo si alguno de los 4 pares coincide
-        if (current != closest &&
-           (current->node1_id == closest->node1_id ||
-            current->node1_id == closest->node2_id ||
-            current->node2_id == closest->node1_id ||
-            current->node2_id == closest->node2_id)) {
-
-            printf("     - %s\n", current->name);
+        if (strcmp(current->name, closest->name) != 0) {
+            for (int i = 0; i < node_count; i++) {
+                if (current->node1_id == nodes[i] || current->node2_id == nodes[i]) {
+                    int already = 0;
+                    for (int j = 0; j < seen_count; j++)
+                        if (strcmp(seen[j], current->name) == 0) { already = 1; break; }
+                    if (!already && seen_count < 64) {
+                        printf("         - %s\n", current->name);
+                        strcpy(seen[seen_count++], current->name);
+                    }
+                    break;
+                }
+            }
         }
         current = current->next;
     }

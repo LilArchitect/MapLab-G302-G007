@@ -71,7 +71,7 @@ Place *find_place(Place *head, char *name)
     get_type_and_strip_prefix(temp);
 
     // printf("DEBUG comparing: [%s] vs [%s]\n", temp, name);
-    if (strcmp(temp, name) == 0)
+    if (strcmp(temp, nameStripped) == 0)
       return current;
 
     // Evitar duplicados
