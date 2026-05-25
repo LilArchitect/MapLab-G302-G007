@@ -7,6 +7,7 @@
 #include "utils.h"
 #include <ctype.h>
 #include "structures.h"
+#include "hashmap.h"
 
 #include "place.h"
 #include "address.h"
@@ -36,6 +37,7 @@ int main()
 
   House *houses = load_houses(mapName);
   Street *streets = load_streets(mapName);
+  IntersectionMap *imap = build_intersection_map(streets);
   Place *places = load_places(mapName);
 
   // DEBUG — contar elementos cargados
@@ -105,12 +107,13 @@ int main()
              closest->node1_id, closest->lat1, closest->lon1,
              closest->node2_id, closest->lat2, closest->lon2);
       //printf("DEBUG: before find_connected\n");
-      find_connected_streets(streets, closest);
+      find_connected_streets_fast(imap, closest);  // O(1) lookup
       //printf("DEBUG: after find_connected\n");
     }
   }
 
   //printf("DEBUG: About to free all arrays\n");  
+  hashmap_free(imap);
   free_houses(houses);
   free_places(places);
   free_streets(streets);
