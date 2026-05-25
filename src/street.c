@@ -16,18 +16,25 @@ Street* load_streets(char* mapName) {
 
     Street *head = NULL;
     Street temp;
+    int skipped = 0;
 
-    while (fscanf(file, "%lld,%lf,%lf,%lld,%lf,%lf,%lf,%127[^\n]",
+    char line [512];
+
+    while (fgets(line, sizeof(line), file)) {
+        if(fscanf(file, "%lld,%lf,%lf,%lld,%lf,%lf,%lf,%127[^\n]",
                   &temp.node1_id, &temp.lat1, &temp.lon1,
                   &temp.node2_id, &temp.lat2, &temp.lon2,
                   &temp.speed, temp.name) == 8) {
 
-        Street *new = malloc(sizeof(Street));
-        *new = temp;
-        new->next = head;
-        head = new;
+            Street *new = malloc(sizeof(Street));
+            *new = temp;
+            new->next = head;
+            head = new;
+        } else {
+            skipped++;
+        }
     }
-
+    printf("DEBUG streets: skipped %d malformed lines\n", skipped);
     fclose(file);
     return head;
 }

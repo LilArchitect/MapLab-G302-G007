@@ -38,6 +38,21 @@ int main()
   Street *streets = load_streets(mapName);
   Place *places = load_places(mapName);
 
+  // DEBUG — contar elementos cargados
+  int house_count = 0, street_count = 0, place_count = 0;
+
+  House *hh = houses;
+  while (hh != NULL) { house_count++; hh = hh->next; }
+
+  Street *ss = streets;
+  while (ss != NULL) { street_count++; ss = ss->next; }
+
+  Place *pp = places;
+  while (pp != NULL) { place_count++; pp = pp->next; }
+
+  printf("DEBUG loaded: %d houses | %d streets | %d places\n",
+         house_count, street_count, place_count);
+
   if (houses == NULL)  printf("Warning: no houses loaded\n");
   if (streets == NULL) printf("Warning: no streets loaded\n");
   if (places == NULL)  printf("Warning: no places loaded\n");
@@ -54,28 +69,19 @@ int main()
     break;
   }
   case 2:
-    double lat, lon;
+
     printf("Enter source coordinates:\n");
     printf("    Enter latitude: ");
     scanf("%lf", &lat);
     printf("    Enter longitude: ");
     scanf("%lf", &lon);
-
-    Street *street = coordinates(streets, lat, lon);
-    printf("Street found: %s\n", street->name);
-    printf("Street segment: %6f, %6f to %6f, %6f\n",street->lat1, street->lon1, street->lat2, street->lon2);
-    printf("    Closest street: %s\n", street->name);
-    printf("    Between %lld (%.6f, %.6f) and %lld (%.6f, %.6f)\n\n",
-               street->node1_id, street->lat1, street->lon1,
-               street->node2_id, street->lat2, street->lon2);
-        
-    find_connected_streets(streets, street);
     break;
   case 3:
   {
     Place *p = place(places);
     lat = p->latitude;
     lon = p->longitude;
+    printf("DEBUG place: %s -> lat=%.6f, lon=%.6f\n", p->name, lat, lon);
     printf("    Found at (%.6f, %.6f)\n", lat, lon);
     break;
   }
@@ -84,28 +90,26 @@ int main()
     break;
   }
 
-  if (option == 1 || option == 3)
-  {
-    //printf("DEBUG: Entered option 1 and 3 if\n");  
-    if (streets == NULL) {
-    printf("Error: streets not loaded.\n");
+ 
+  if (streets == NULL) {
+  printf("Error: streets not loaded.\n");
+  } else {
+  Street *closest = find_closest_street(streets, lat, lon);
+  //printf("DEBUG: find_closest_street done\n");  
+    if (closest == NULL) {
+      printf("No closest street found.\n");
     } else {
-    Street *closest = find_closest_street(streets, lat, lon);
-    //printf("DEBUG: find_closest_street done\n");  
-      if (closest == NULL) {
-        printf("No closest street found.\n");
-      } else {
-        //printf("DEBUG: closest found: %s\n", closest->name);
-        printf("    Closest street: %s\n", closest->name);
-        printf("    Between %lld (%.6f, %.6f) and %lld (%.6f, %.6f)\n\n",
-               closest->node1_id, closest->lat1, closest->lon1,
-               closest->node2_id, closest->lat2, closest->lon2);
-        //printf("DEBUG: before find_connected\n");
-        find_connected_streets(streets, closest);
-        //printf("DEBUG: after find_connected\n");
-      }
+      //printf("DEBUG: closest found: %s\n", closest->name);
+      printf("    Closest street: %s\n", closest->name);
+      printf("    Between %lld (%.6f, %.6f) and %lld (%.6f, %.6f)\n\n",
+             closest->node1_id, closest->lat1, closest->lon1,
+             closest->node2_id, closest->lat2, closest->lon2);
+      //printf("DEBUG: before find_connected\n");
+      find_connected_streets(streets, closest);
+      //printf("DEBUG: after find_connected\n");
     }
   }
+
   //printf("DEBUG: About to free all arrays\n");  
   free_houses(houses);
   free_places(places);

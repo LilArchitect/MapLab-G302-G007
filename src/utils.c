@@ -6,8 +6,6 @@
 #include "structures.h"
 #include "utils.h"
 
-
-
 // Asks the user for a string
 char *get_string(int size, const char *msg)
 {
@@ -138,8 +136,10 @@ Street *find_closest_street(Street *head, double user_lat, double user_lon)
         Position a = {current->lat1, current->lon1};
         Position b = {current->lat2, current->lon2};
 
+
         Position mid = midpoint(a, b);
         double dist = haversine(user, mid);
+
 
         if (min_dist < 0 || dist < min_dist)
         {
@@ -153,65 +153,80 @@ Street *find_closest_street(Street *head, double user_lat, double user_lon)
     return closest;
 }
 
-
 // Function to remove " "
-void ltrim(char *s) {
-    while (*s == ' ') {
+void ltrim(char *s)
+{
+    while (*s == ' ')
+    {
         memmove(s, s + 1, strlen(s));
     }
 }
 
-StreetType get_type_and_strip_prefix(char *s) {
+StreetType get_type_and_strip_prefix(char *s)
+{
     ltrim(s);
     // Street
     if (strncmp(s, "carrer ", 7) == 0 ||
-        strncmp(s, "calle ", 6)  == 0 ||
-        strncmp(s, "c/ ", 3)     == 0 ||
-        strncmp(s, "c. ", 3)     == 0) {
-        if (strncmp(s, "carrer ", 7) == 0){
-          memmove(s, s + 7, strlen(s + 7) + 1);
-        }      
-        else if (strncmp(s, "calle ", 6) == 0) {
-          memmove(s, s + 6, strlen(s + 6) + 1);
+        strncmp(s, "calle ", 6) == 0 ||
+        strncmp(s, "c/ ", 3) == 0 ||
+        strncmp(s, "c. ", 3) == 0)
+    {
+        if (strncmp(s, "carrer ", 7) == 0)
+        {
+            memmove(s, s + 7, strlen(s + 7) + 1);
         }
-        else {
-          memmove(s, s + 3, strlen(s + 3) + 1);
+        else if (strncmp(s, "calle ", 6) == 0)
+        {
+            memmove(s, s + 6, strlen(s + 6) + 1);
+        }
+        else
+        {
+            memmove(s, s + 3, strlen(s + 3) + 1);
         }
         ltrim(s);
         return TYPE_STREET;
     }
     // Avenue
     if (strncmp(s, "avinguda ", 9) == 0 ||
-        strncmp(s, "avenida ", 8)  == 0 ||
-        strncmp(s, "av. ", 4)      == 0 ||
-        strncmp(s, "av ", 3)       == 0) {
-        if (strncmp(s, "avinguda ", 9) == 0) {
-          memmove(s, s + 9, strlen(s + 9) + 1);
+        strncmp(s, "avenida ", 8) == 0 ||
+        strncmp(s, "av. ", 4) == 0 ||
+        strncmp(s, "av ", 3) == 0)
+    {
+        if (strncmp(s, "avinguda ", 9) == 0)
+        {
+            memmove(s, s + 9, strlen(s + 9) + 1);
         }
-        else if (strncmp(s, "avenida ", 8) == 0) {
-          memmove(s, s + 8, strlen(s + 8) + 1);
+        else if (strncmp(s, "avenida ", 8) == 0)
+        {
+            memmove(s, s + 8, strlen(s + 8) + 1);
         }
-        else if (strncmp(s, "av. ", 4) == 0) {
-          memmove(s, s + 4, strlen(s + 4) + 1);
+        else if (strncmp(s, "av. ", 4) == 0)
+        {
+            memmove(s, s + 4, strlen(s + 4) + 1);
         }
-        else {
-          memmove(s, s + 3, strlen(s + 3) + 1);
+        else
+        {
+            memmove(s, s + 3, strlen(s + 3) + 1);
         }
         ltrim(s);
         return TYPE_AVENUE;
     }
     // Passage
     if (strncmp(s, "passatge ", 9) == 0 ||
-        strncmp(s, "pasaje ", 7)   == 0 ||
-        strncmp(s, "psg. ", 5)     == 0) {
-        if (strncmp(s, "passatge ", 9) == 0) {
-          memmove(s, s + 9, strlen(s + 9) + 1);
+        strncmp(s, "pasaje ", 7) == 0 ||
+        strncmp(s, "psg. ", 5) == 0)
+    {
+        if (strncmp(s, "passatge ", 9) == 0)
+        {
+            memmove(s, s + 9, strlen(s + 9) + 1);
         }
-        else if (strncmp(s, "pasaje ", 7) == 0) {
-          memmove(s, s + 7, strlen(s + 7) + 1);
+        else if (strncmp(s, "pasaje ", 7) == 0)
+        {
+            memmove(s, s + 7, strlen(s + 7) + 1);
         }
-        else {
-          memmove(s, s + 5, strlen(s + 5) + 1);
+        else
+        {
+            memmove(s, s + 5, strlen(s + 5) + 1);
         }
         ltrim(s);
         return TYPE_PASSAGE;
@@ -220,17 +235,22 @@ StreetType get_type_and_strip_prefix(char *s) {
     return TYPE_UNKNOWN;
 }
 
-void replace_em_dash(char *s) {
+void replace_em_dash(char *s)
+{
     char result[SIZE];
     int j = 0;
-    for (int i = 0; s[i] != '\0'; ) {
+    for (int i = 0; s[i] != '\0';)
+    {
         // Guion largo UTF-8: E2 80 93
         if ((unsigned char)s[i] == 0xE2 &&
-            (unsigned char)s[i+1] == 0x80 &&
-            (unsigned char)s[i+2] == 0x93) {
+            (unsigned char)s[i + 1] == 0x80 &&
+            (unsigned char)s[i + 2] == 0x93)
+        {
             result[j++] = '-';
             i += 3;
-        } else {
+        }
+        else
+        {
             result[j++] = s[i++];
         }
     }
@@ -238,9 +258,11 @@ void replace_em_dash(char *s) {
     strcpy(s, result);
 }
 
-Street *coordinates(Street *street_head, double lat, double lon){
-    if (street_head == NULL) printf("Warning: no streets loaded\n");
+Street *coordinates(Street *street_head, double lat, double lon)
+{
+    if (street_head == NULL)
+        printf("Warning: no streets loaded\n");
     Street *street;
-    street = find_closest_street(street_head,  lat,  lon);
+    street = find_closest_street(street_head, lat, lon);
     return street;
 }
