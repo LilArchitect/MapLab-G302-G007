@@ -3,6 +3,7 @@
 
 void assertEquals(const char *found, const char *expected);
 void assertEqualsInt(int found, int expected);
+void assertNull(void *found);
 void success();
 void running(const char *description);
 void successtest();

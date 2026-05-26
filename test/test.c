@@ -1,11 +1,13 @@
-#include "sample_lib_test.c"
 #include "utils.h"
+#include "test_houses.h"
+#include "test_houses.c"
+#include "test_places.h"
+#include "test_places.c"
 #include <stdio.h>
 
 int main() {
-  {
-    // Call all test modules you want to run here
-    sample_lib_test();
-  }
+  test_houses();
+  test_places();
   allsuccess();
+  return 0;
 }
