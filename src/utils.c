@@ -136,10 +136,8 @@ Street *find_closest_street(Street *head, double user_lat, double user_lon)
         Position a = {current->lat1, current->lon1};
         Position b = {current->lat2, current->lon2};
 
-
         Position mid = midpoint(a, b);
         double dist = haversine(user, mid);
-
 
         if (min_dist < 0 || dist < min_dist)
         {

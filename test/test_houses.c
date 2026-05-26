@@ -8,7 +8,8 @@
 #include "utils.h"
 
 // Creates linked list of houses
-static House *make_house(const char *street, int number, double lat, double lon, House *next) {
+static House *make_house(const char *street, int number, double lat, double lon, House *next)
+{
     House *h = malloc(sizeof(House));
     strncpy(h->street, street, SIZE - 1);
     h->street[SIZE - 1] = '\0';
@@ -19,7 +20,8 @@ static House *make_house(const char *street, int number, double lat, double lon,
     return h;
 }
 
-void test_houses() {
+void test_houses()
+{
     running("Houses");
 
     // Test 1: find_house exact match
@@ -29,7 +31,8 @@ void test_houses() {
         list = make_house("Carrer de Pallars", 100, 41.400000, 2.190000, list);
 
         House *result = find_house(list, "Carrer de Roc Boronat", 138);
-        if (result == NULL) {
+        if (result == NULL)
+        {
             fprintf(stderr, "\033[0;31m    Expected a house but got NULL\033[0m\n\n");
             assert(0);
         }
@@ -45,7 +48,8 @@ void test_houses() {
         House *list = make_house("Carrer de Roc Boronat", 10, 41.40, 2.19, NULL);
 
         House *result = find_house(list, "carrer de roc boronat", 10);
-        if (result == NULL) {
+        if (result == NULL)
+        {
             fprintf(stderr, "\033[0;31m    Expected a house but got NULL\033[0m\n\n");
             assert(0);
         }
@@ -60,7 +64,8 @@ void test_houses() {
         House *list = make_house("Carrer de Pallars", 50, 41.40, 2.19, NULL);
 
         House *result = find_house(list, "Calle de Pallars", 50);
-        if (result == NULL) {
+        if (result == NULL)
+        {
             fprintf(stderr, "\033[0;31m    Expected a house but got NULL\033[0m\n\n");
             assert(0);
         }
