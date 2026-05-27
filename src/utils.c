@@ -5,6 +5,7 @@
 #include <math.h>
 #include "structures.h"
 #include "utils.h"
+#include "hashmap.h"
 
 // Asks the user for a string
 char *get_string(int size, const char *msg)
@@ -403,7 +404,7 @@ Path_node *BFS(IntersectionMap *map, Street *origin_head, Street *dest_head)
 
     while (!queue_is_empty(Q))
     {
-        Path_node *path = dequeue(Q);
+        Path_node *path = dequeue(&Q);
         Path_node *temp = path;
 
         while (temp->next != NULL)
@@ -431,7 +432,7 @@ Path_node *BFS(IntersectionMap *map, Street *origin_head, Street *dest_head)
                 {
                     if (!is_visited(visited, sn->street))
                     {
-                        Path_node *new_path = copy_path_and_add(path, sn->street);
+                        Path_node *new_path = add_to_path(path, sn->street);
                         enqueue(Q, new_path);
                     }
                     sn = sn->next;

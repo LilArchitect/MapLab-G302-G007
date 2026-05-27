@@ -56,23 +56,23 @@ typedef struct HashEntry {
     struct HashEntry *next;
 } HashEntry;
 
-typedef struct {
+typedef struct IntersectionMap {
     HashEntry *buckets[HASHMAP_SIZE];
 } IntersectionMap;
 
-typedef struct {
-    Path_node *path;
-    Queue *next;
-}Queue;
-
-typedef struct{
-    Street *street;
-    Path_node *next;
+typedef struct Path_node{
+    struct Street *street;
+    struct Path_node *next;
 }Path_node;
 
-typedef struct{
-    Street *street;
-    Visited_node *next;
+typedef struct Queue{
+    struct Path_node *path;
+    struct Queue *next;
+}Queue;
+
+typedef struct Visited_node{
+    struct Street *street;
+    struct Visited_node *next;
 }Visited_node;
 
 #endif
