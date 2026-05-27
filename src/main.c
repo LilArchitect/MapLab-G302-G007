@@ -33,7 +33,7 @@ int main()
   // printf("%s", mapName);
   printf("--- ORIGIN ---\n");
   double lat = 0, lon = 0;
-  int option = get_option();
+  int opt_origin = get_option();
 
   House *houses = load_houses(mapName);
   Street *streets = load_streets(mapName);
@@ -60,7 +60,7 @@ int main()
   if (places == NULL)  printf("Warning: no places loaded\n");
 
   // Different cases
-  switch (option)
+  switch (opt_origin)
   {
   case 1:
   {
@@ -111,6 +111,63 @@ int main()
       //printf("DEBUG: after find_connected\n");
     }
   }
+
+  printf("--- DESTINATION ---\n");
+  int opt_dest = get_option();
+
+  switch (opt_dest)
+  {
+  case 1:
+  {
+    House *h = house(houses);
+    lat = h->latitude;
+    lon = h->longitude;
+    printf("    Found at (%.6f, %.6f)\n", lat, lon);
+    break;
+  }
+  case 2:
+
+    printf("Enter source coordinates:\n");
+    printf("    Enter latitude: ");
+    scanf("%lf", &lat);
+    printf("    Enter longitude: ");
+    scanf("%lf", &lon);
+    break;
+  case 3:
+  {
+    Place *p = place(places);
+    lat = p->latitude;
+    lon = p->longitude;
+    printf("DEBUG place: %s -> lat=%.6f, lon=%.6f\n", p->name, lat, lon);
+    printf("    Found at (%.6f, %.6f)\n", lat, lon);
+    break;
+  }
+  case -1:
+    printf("ERROR");
+    break;
+  }
+
+ 
+  if (streets == NULL) {
+  printf("Error: streets not loaded.\n");
+  } else {
+  Street *closest = find_closest_street(streets, lat, lon);
+  //printf("DEBUG: find_closest_street done\n");  
+    if (closest == NULL) {
+      printf("No closest street found.\n");
+    } else {
+      //printf("DEBUG: closest found: %s\n", closest->name);
+      printf("    Closest street: %s\n", closest->name);
+      printf("    Between %lld (%.6f, %.6f) and %lld (%.6f, %.6f)\n\n",
+             closest->node1_id, closest->lat1, closest->lon1,
+             closest->node2_id, closest->lat2, closest->lon2);
+      //printf("DEBUG: before find_connected\n");
+      find_connected_streets_fast(imap, closest);  // O(1) lookup
+      //printf("DEBUG: after find_connected\n");
+    }
+  }
+
+
 
   //printf("DEBUG: About to free all arrays\n");  
   hashmap_free(imap);

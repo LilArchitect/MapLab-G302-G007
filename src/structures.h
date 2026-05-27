@@ -60,4 +60,19 @@ typedef struct {
     HashEntry *buckets[HASHMAP_SIZE];
 } IntersectionMap;
 
+typedef struct {
+    Path_node *path;
+    Queue *next;
+}Queue;
+
+typedef struct{
+    Street *street;
+    Path_node *next;
+}Path_node;
+
+typedef struct{
+    Street *street;
+    Visited_node *next;
+}Visited_node;
+
 #endif

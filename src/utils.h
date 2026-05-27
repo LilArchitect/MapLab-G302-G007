@@ -24,4 +24,11 @@ Position midpoint(Position a, Position b);
 void replace_em_dash(char *s);
 Street *find_closest_street(Street *head, double user_lat, double user_lon);
 Street *coordinates(Street *street_head, double lat, double lon);
+Queue *create_queue();
+Queue *enqueue(Queue *queue, Street *street);
+Queue *dequeue(Queue *queue);
+void free_queue(Queue *queue);
+Visited_node *add_visited(Visited_node *visited, Street *street);
+int is_visited(Visited_node *visited, Street *street);
+void free_visited(Visited_node *visited);
 #endif
