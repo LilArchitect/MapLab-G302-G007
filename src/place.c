@@ -8,7 +8,7 @@
 #include <ctype.h>
 #include "structures.h"
 #define MAPS_SIZE 6 // Define the size of the maps array
-#define SIZE 128
+#define SIZE 256
 
 #define MAX_SUGGESTIONS 5
 #define MAX_DISTANCE 5

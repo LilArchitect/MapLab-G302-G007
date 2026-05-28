@@ -130,8 +130,8 @@ void latlon_to_xy(double lat_ref, double lon_ref,
     double lat_ref_rad = toRadians(lat_ref);
     double dlat = toRadians(lat - lat_ref);
     double dlon = toRadians(lon - lon_ref);
-    *x = EARTH_RADIUS * dlon * cos(lat_ref_rad);
-    *y = EARTH_RADIUS * dlat;
+    *x = EARTH_RADIUS * dlon * cos(lat_ref_rad) * 1000.0;
+    *y = EARTH_RADIUS * dlat * 1000.0;
 }
 
 Street *find_closest_street(Street *head, double user_lat, double user_lon)

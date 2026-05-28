@@ -5,7 +5,7 @@
 #include "utils.h"
 #include "street.h"
 
-#define SIZE 128
+#define SIZE 256
 
 Street* load_streets(char* mapName) {
     char filename[SIZE];
@@ -21,7 +21,7 @@ Street* load_streets(char* mapName) {
     char line [512];
 
     while (fgets(line, sizeof(line), file)) {
-        if(fscanf(file, "%lld,%lf,%lf,%lld,%lf,%lf,%lf,%127[^\n]",
+        if(fscanf(file, "%lld,%lf,%lf,%lld,%lf,%lf,%lf,%255[^\n]",
                   &temp.node1_id, &temp.lat1, &temp.lon1,
                   &temp.node2_id, &temp.lat2, &temp.lon2,
                   &temp.speed, temp.name) == 8) {

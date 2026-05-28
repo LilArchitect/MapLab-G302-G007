@@ -1,6 +1,6 @@
 #ifndef STRUCTURES_H
 #define STRUCTURES_H
-#define SIZE 128
+#define SIZE 256
 #define HASHMAP_SIZE 1024
 
 

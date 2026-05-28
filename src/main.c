@@ -14,7 +14,7 @@
 #include "address.h"
 #include "street.h"
 #define MAPS_SIZE 6 // Define the size of the maps array
-#define SIZE 128
+#define SIZE 256
 
 // Array of the valid types of maps.
 const char *valid_maps[] = {
@@ -172,18 +172,16 @@ int main()
     dest_street = closest;
     
   }
-  //STREET TO STREET, NOT COORDS
+
   if(or_street == NULL || dest_street == NULL) printf("Error saving origin or destination street");
   else {
     Path_node *node = BFS(imap, or_street, dest_street);
-    if (node == NULL){
+    if (node == NULL) {
       printf("No route found.\n");
-    } else {
-        while(node->next != NULL){
-        printf("%s\n",node->street->name);
-        node = node->next;
-        }
-      }
+    } else{
+      print_path(node);
+      free_path(node);
+    }
   }
 
   //printf("DEBUG: About to free all arrays\n");  
