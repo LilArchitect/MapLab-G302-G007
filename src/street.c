@@ -18,13 +18,20 @@ Street* load_streets(char* mapName) {
     Street temp;
     int skipped = 0;
 
-    char line [512];
-
+    char line[512];
     while (fgets(line, sizeof(line), file)) {
-        if(fscanf(file, "%lld,%lf,%lf,%lld,%lf,%lf,%lf,%255[^\n]",
+
+        int len = strlen(line);
+        while (len > 0 && (line[len-1] == '\n' || line[len-1] == '\r'))
+            line[--len] = '\0';
+
+        if (sscanf(line, "%lld,%lf,%lf,%lld,%lf,%lf,%lf,%255[^\n]",
                   &temp.node1_id, &temp.lat1, &temp.lon1,
                   &temp.node2_id, &temp.lat2, &temp.lon2,
                   &temp.speed, temp.name) == 8) {
+            int nlen = strlen(temp.name);
+            if (nlen > 0 && temp.name[nlen-1] == '\r')
+                temp.name[nlen-1] = '\0';
 
             Street *new = malloc(sizeof(Street));
             *new = temp;

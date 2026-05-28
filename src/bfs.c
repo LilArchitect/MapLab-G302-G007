@@ -232,7 +232,7 @@ void print_path(Path_node *node) {
             printf("    You have arrived to %s\n", curr->street->name);
         } else {
             int dir = turn_direction(prev->street, curr->street);
-            printf("DEBUG before print direction: dir = %d", dir);
+            //printf("DEBUG before print direction: dir = %d", dir);
             if(dir == 1) printf("  Turn left to %s and continue for %dm\n", curr->street->name, meters);
             if(dir == 0) printf("  Continue straight to %s and continue for %dm\n", curr->street->name, meters);
             if(dir == -1) printf("  Turn right to %s and continue for %dm\n", curr->street->name, meters);
