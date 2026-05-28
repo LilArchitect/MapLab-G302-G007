@@ -105,8 +105,11 @@ House *find_house(House *head, char *name, int number)
       }
     }
     size = unique_size;
-
-    printf("Introduced street number is %i, and was not found for selected street.\n", number);
+    if (number == -1) {
+      printf("Introduced street number was not an number.\n");
+    } else {
+      printf("Introduced street number is %i, and was not found for selected street.\n", number);
+    }
     printf("Available numbers are:\n");
     for (int i = 0; i < size; i++)
     {
@@ -119,7 +122,12 @@ House *find_house(House *head, char *name, int number)
     do
     {
       printf("Try another number:\n");
-      scanf("%d", &new_number);
+      if (scanf("%d", &new_number) != 1) {
+        int c;
+        while ((c = getchar() != '\n' && c != EOF));
+        new_number = -1;
+      }
+      printf("choice: %i\n", new_number);
       for (int i = 0; i < size; i++)
       {
         if (new_number == doors[i])
@@ -197,7 +205,12 @@ House *find_house(House *head, char *name, int number)
     do
     {
       printf("Choose (1-%d) or 0 to cancel: \n", sug_count);
-      scanf("%d", &choice);
+      if (scanf("%d", &choice) != 1) {
+        int c;
+        while ((c = getchar() != '\n' && c != EOF));
+        choice = -1;
+      }
+      printf("choice: %i\n", choice);
     } while (choice < 0 || choice > sug_count);
 
     if (choice > 0)
@@ -229,7 +242,11 @@ House *house(House *head)
     printf("Enter street name (e.g. Carrer de Roc Boronat): \n");
     scanf(" %[^\n]", street);
     printf("Enter street number (e.g. 138): \n");
-    scanf(" %d", &number);
+    if (scanf("%d", &number) != 1) {
+      int c;
+      while ((c = getchar() != '\n' && c != EOF));
+      number = -1; 
+    }
     normalize(street);
 
     result = find_house(head, street, number);
