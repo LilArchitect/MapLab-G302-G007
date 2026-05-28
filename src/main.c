@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include "structures.h"
 #include "hashmap.h"
+#include "bfs.h"
 
 #include "place.h"
 #include "address.h"
@@ -92,7 +93,7 @@ int main()
     break;
   }
 
- 
+  Street *or_street = NULL;
   if (streets == NULL) {
   printf("Error: streets not loaded.\n");
   } else {
@@ -110,7 +111,9 @@ int main()
       find_connected_streets_fast(imap, closest);  // O(1) lookup
       //printf("DEBUG: after find_connected\n");
     }
+    or_street = closest;
   }
+  
 
   printf("--- DESTINATION ---\n");
   int opt_dest = get_option();
@@ -147,7 +150,7 @@ int main()
     break;
   }
 
- 
+  Street *dest_street = NULL;
   if (streets == NULL) {
   printf("Error: streets not loaded.\n");
   } else {
@@ -155,6 +158,7 @@ int main()
   //printf("DEBUG: find_closest_street done\n");  
     if (closest == NULL) {
       printf("No closest street found.\n");
+
     } else {
       //printf("DEBUG: closest found: %s\n", closest->name);
       printf("    Closest street: %s\n", closest->name);
@@ -165,9 +169,22 @@ int main()
       find_connected_streets_fast(imap, closest);  // O(1) lookup
       //printf("DEBUG: after find_connected\n");
     }
+    dest_street = closest;
+    
   }
-
-
+  //STREET TO STREET, NOT COORDS
+  if(or_street == NULL || dest_street == NULL) printf("Error saving origin or destination street");
+  else {
+    Path_node *node = BFS(imap, or_street, dest_street);
+    if (node == NULL){
+      printf("No route found.\n");
+    } else {
+        while(node->next != NULL){
+        printf("%s\n",node->street->name);
+        node = node->next;
+        }
+      }
+  }
 
   //printf("DEBUG: About to free all arrays\n");  
   hashmap_free(imap);
