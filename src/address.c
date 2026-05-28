@@ -106,7 +106,7 @@ House *find_house(House *head, char *name, int number)
     }
     size = unique_size;
 
-    printf("Introduced number was not found.\n");
+    printf("Introduced street number is %i, and was not found for selected street.\n", number);
     printf("Available numbers are:\n");
     for (int i = 0; i < size; i++)
     {

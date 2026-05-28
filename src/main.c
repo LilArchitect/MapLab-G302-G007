@@ -68,7 +68,7 @@ int main()
     House *h = house(houses);
     lat = h->latitude;
     lon = h->longitude;
-    printf("    Found at (%.6f, %.6f)\n", lat, lon);
+    printf("Street: %s\n    Found at (%.6f, %.6f)\n", h->street, lat, lon);
     break;
   }
   case 2:
@@ -84,8 +84,7 @@ int main()
     Place *p = place(places);
     lat = p->latitude;
     lon = p->longitude;
-    printf("DEBUG place: %s -> lat=%.6f, lon=%.6f\n", p->name, lat, lon);
-    printf("    Found at (%.6f, %.6f)\n", lat, lon);
+    printf("Street: %s\n    Found at (%.6f, %.6f)\n", p->name, lat, lon);
     break;
   }
   case -1:
@@ -125,7 +124,7 @@ int main()
     House *h = house(houses);
     lat = h->latitude;
     lon = h->longitude;
-    printf("    Found at (%.6f, %.6f)\n", lat, lon);
+    printf("Street: %s\n    Found at (%.6f, %.6f)\n", h->street, lat, lon);
     break;
   }
   case 2:
