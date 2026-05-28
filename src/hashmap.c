@@ -11,7 +11,7 @@ static int hash(long long node_id) {
     return (int)(v % HASHMAP_SIZE);
 }
 
-IntersectionMap *hashmap_create(void) {
+IntersectionMap *hashmap_create() {
     IntersectionMap *map = calloc(1, sizeof(IntersectionMap));
     return map;
 }
@@ -125,4 +125,48 @@ void hashmap_free(IntersectionMap *map) {
         }
     }
     free(map);
+}
+
+static int visited_hash(long long node1_id, long long node2_id) {
+    unsigned long long v = (unsigned long long)(node1_id * 31 + node2_id);
+    return (int)(v % HASHMAP_SIZE);
+}
+
+Visited_hash *visited_hashmap_create() {
+    Visited_hash *visited = calloc(1, sizeof(Visited_hash));
+    return visited;
+}
+
+void visited_hashmap_insert(Visited_hash *visited, Street *street) {
+    int idx = visited_hash(street->node1_id, street->node2_id);
+
+    Visited_entry *entry = malloc(sizeof(Visited_entry));
+
+    entry->node1_id = street->node1_id;
+    entry->node2_id = street->node2_id;
+    entry->next = visited->buckets[idx];
+    visited->buckets[idx] = entry;
+}
+
+int is_visited_hash(Visited_hash *visited, Street *street){
+    int idx = visited_hash(street->node1_id, street->node2_id);
+    Visited_entry *entry = visited->buckets[idx];
+    while (entry != NULL) {
+        if (entry->node1_id == street->node1_id && entry->node2_id == street->node2_id)
+            return 1;
+        entry = entry->next;
+    }
+    return 0;
+}
+
+void free_visited_hash(Visited_hash *visited){
+    for(int i = 0; i < HASHMAP_SIZE; i++){
+        Visited_entry *entry = visited->buckets[i];
+        while (entry != NULL) {
+                Visited_entry *tmp = entry;
+                entry = entry->next;
+                free(tmp);
+            }
+    }
+    free(visited);
 }

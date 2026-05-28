@@ -75,4 +75,14 @@ typedef struct Visited_node{
     struct Visited_node *next;
 }Visited_node;
 
+typedef struct Visited_entry{
+    long long node1_id;
+    long long node2_id;
+    struct Visited_entry *next;
+}Visited_entry;
+
+typedef struct Visited_hash{
+    Visited_entry *buckets[HASHMAP_SIZE];
+}Visited_hash;
+
 #endif

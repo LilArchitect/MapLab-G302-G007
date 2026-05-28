@@ -148,7 +148,7 @@ Path_node *BFS(IntersectionMap *map, Street *origin_head, Street *dest_head)
     initial_path->next = NULL;
     Q = enqueue(Q, initial_path);
 
-    Visited_node *visited = NULL;
+    Visited_hash *visited = visited_hashmap_create();
 
     while (!queue_is_empty(Q))
     {
@@ -165,18 +165,18 @@ Path_node *BFS(IntersectionMap *map, Street *origin_head, Street *dest_head)
             current_street->node1_id == dest_head->node2_id ||
             current_street->node2_id == dest_head->node2_id)
         {
-            free_visited(visited);
+            free_visited_hash(visited);
             free_queue(Q);
             return path;
         }
 
-        if (!is_visited(visited, current_street))
+        if (!is_visited_hash(visited, current_street))
         {
-            visited = add_visited(visited, current_street);
+            visited_hashmap_insert(visited, current_street);
             StreetNode *sn = hashmap_get(map, current_street->node2_id);
             while (sn != NULL)
             {
-                if (!is_visited(visited, sn->street))
+                if (!is_visited_hash(visited, sn->street))
                 {
                     Path_node *new_path = add_to_path(path, sn->street);
                     Q = enqueue(Q, new_path);
