@@ -7,6 +7,8 @@
 #include "test_streets.c"
 #include "test_hashmap.h"
 #include "test_hashmap.c"
+#include "test_bfs.h"
+#include "test_bfs.c"
 #include <stdio.h>
 
 int main()
@@ -15,6 +17,7 @@ int main()
   test_places();
   test_streets();
   hashmap_test();
+  bfs_test();
   allsuccess();
   return 0;
 }
