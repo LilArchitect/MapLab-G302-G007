@@ -4,15 +4,12 @@
 #include "utils.h"
 #include "structures.h"
 #include "place.h"
-<<<<<<< HEAD
-=======
 
 /** @brief Number of valid maps available in the system. */
 #define MAPS_SIZE 6
 
 /** @brief Maximum buffer size for strings. */
 #define SIZE 256
->>>>>>> 1a16e9ea21e83ff3713ee3d31ded159691d1aaf0
 
 /** @brief Maximum number of street name suggestions shown to the user. */
 #define MAX_SUGGESTIONS 5

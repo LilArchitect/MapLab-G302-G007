@@ -2,12 +2,6 @@
 #define ADDRESS_H
 #include "structures.h"
 
-<<<<<<< HEAD
-House *load_houses(char *mapName);
-House *find_house(House *head, char *name, int number);
-House *house(House *head);
-void free_houses(House *head);
-=======
 /**
  * @brief Loads all houses from a map's houses.txt file.
  *
@@ -52,5 +46,4 @@ House* house(House *head);
  * @param head Head of the list to free.
  */ 
 void   free_houses(House *head);
->>>>>>> 1a16e9ea21e83ff3713ee3d31ded159691d1aaf0
 #endif
