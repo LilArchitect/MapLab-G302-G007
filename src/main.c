@@ -212,7 +212,7 @@ int get_option()
   int opt_value = -1;
   do
   {
-    option = get_string(16, "How do you want to input the origin position? (address/coordinate/place): ");
+    option = get_string(16, "How do you want to input the position? (address/coordinate/place): ");
 
     if (!strcmp(option, "1") || !strcmp(option, "address"))
       opt_value = 1;
