@@ -4,8 +4,20 @@
 #include "utils.h"
 #include "structures.h"
 #include "place.h"
+<<<<<<< HEAD
+=======
 
+/** @brief Number of valid maps available in the system. */
+#define MAPS_SIZE 6
+
+/** @brief Maximum buffer size for strings. */
+#define SIZE 256
+>>>>>>> 1a16e9ea21e83ff3713ee3d31ded159691d1aaf0
+
+/** @brief Maximum number of street name suggestions shown to the user. */
 #define MAX_SUGGESTIONS 5
+
+/** @brief Maximum Levenshtein distance to consider a suggestion valid. */
 #define MAX_DISTANCE 5
 
 House *load_houses(char *mapName)
@@ -46,7 +58,7 @@ House *load_houses(char *mapName)
 House *find_house(House *head, char *name, int number)
 {
   House *current = head;
-  int *doors = NULL; // array of possible numbers
+  int *doors = NULL;
   int capacity = 0;
   int size = 0;
   int found = 0;
@@ -74,7 +86,7 @@ House *find_house(House *head, char *name, int number)
         capacity = capacity ? capacity * 2 : 4;
         doors = realloc(doors, capacity * sizeof(int));
       }
-      doors[size++] = current->number; // Stores numbers of the addres if the introduced one is not found.
+      doors[size++] = current->number;
       if (current->number == number)
       {
         free(doors);
@@ -150,7 +162,6 @@ House *find_house(House *head, char *name, int number)
     normalize(temp);
     get_type_and_strip_prefix(temp);
 
-    // Evitar duplicados
     int already = 0;
     for (int i = 0; i < sug_count; i++)
     {
@@ -177,7 +188,6 @@ House *find_house(House *head, char *name, int number)
       }
       else
       {
-        // Reemplazar la peor sugerencia si esta es mejor
         int worst = 0;
         for (int i = 1; i < MAX_SUGGESTIONS; i++)
           if (distances[i] > distances[worst])
