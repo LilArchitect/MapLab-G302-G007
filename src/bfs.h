@@ -1,6 +1,6 @@
 #ifndef BFS_H
 #define BFS_H
-#include "structures.h" 
+#include "structures.h"
 
 Queue *create_queue();
 Queue *enqueue(Queue *queue, Path_node *path);

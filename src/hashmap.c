@@ -3,7 +3,8 @@
 #include "hashmap.h"
 #include <string.h>
 
-static int hash(long long node_id) {
+static int hash(long long node_id)
+{
     unsigned long long v = (unsigned long long)node_id;
     v = (v ^ (v >> 30)) * 0xbf58476d1ce4e5b9ULL;
     v = (v ^ (v >> 27)) * 0x94d049bb133111ebULL;
@@ -11,17 +12,21 @@ static int hash(long long node_id) {
     return (int)(v % HASHMAP_SIZE);
 }
 
-IntersectionMap *hashmap_create() {
+IntersectionMap *hashmap_create()
+{
     IntersectionMap *map = calloc(1, sizeof(IntersectionMap));
     return map;
 }
 
-void hashmap_insert(IntersectionMap *map, long long node_id, Street *street) {
+void hashmap_insert(IntersectionMap *map, long long node_id, Street *street)
+{
     int idx = hash(node_id);
 
     HashEntry *entry = map->buckets[idx];
-    while (entry != NULL) {
-        if (entry->node_id == node_id) {
+    while (entry != NULL)
+    {
+        if (entry->node_id == node_id)
+        {
 
             StreetNode *sn = malloc(sizeof(StreetNode));
             sn->street = street;
@@ -43,10 +48,12 @@ void hashmap_insert(IntersectionMap *map, long long node_id, Street *street) {
     map->buckets[idx] = new_entry;
 }
 
-StreetNode *hashmap_get(IntersectionMap *map, long long node_id) {
+StreetNode *hashmap_get(IntersectionMap *map, long long node_id)
+{
     int idx = hash(node_id);
     HashEntry *entry = map->buckets[idx];
-    while (entry != NULL) {
+    while (entry != NULL)
+    {
         if (entry->node_id == node_id)
             return entry->streets;
         entry = entry->next;
@@ -54,10 +61,12 @@ StreetNode *hashmap_get(IntersectionMap *map, long long node_id) {
     return NULL;
 }
 
-IntersectionMap *build_intersection_map(Street *head) {
+IntersectionMap *build_intersection_map(Street *head)
+{
     IntersectionMap *map = hashmap_create();
     Street *current = head;
-    while (current != NULL) {
+    while (current != NULL)
+    {
         hashmap_insert(map, current->node1_id, current);
         hashmap_insert(map, current->node2_id, current);
         current = current->next;
@@ -65,7 +74,8 @@ IntersectionMap *build_intersection_map(Street *head) {
     return map;
 }
 
-void find_connected_streets_fast(IntersectionMap *map, Street *street) {
+void find_connected_streets_fast(IntersectionMap *map, Street *street)
+{
     printf("From this street segment, you can go to:\n");
     printf("- %s\n", street->name);
     printf("    Which is connected to:\n");
@@ -78,24 +88,35 @@ void find_connected_streets_fast(IntersectionMap *map, Street *street) {
 
     // Buscar el segmento continuación: mismo nombre, node1 == nuestro node2
     StreetNode *sn2 = hashmap_get(map, street->node2_id);
-    while (sn2 != NULL) {
+    while (sn2 != NULL)
+    {
         if (strcmp(sn2->street->name, street->name) == 0 &&
-            sn2->street->node1_id == street->node2_id) {
+            sn2->street->node1_id == street->node2_id)
+        {
             search_nodes[2] = sn2->street->node2_id;
             break;
         }
         sn2 = sn2->next;
     }
 
-    for (int i = 0; i < 3; i++) {
-        if (search_nodes[i] == -1) continue;
+    for (int i = 0; i < 3; i++)
+    {
+        if (search_nodes[i] == -1)
+            continue;
         StreetNode *sn = hashmap_get(map, search_nodes[i]);
-        while (sn != NULL) {
-            if (sn->street != street && strcmp(sn->street->name, street->name) != 0) {
+        while (sn != NULL)
+        {
+            if (sn->street != street && strcmp(sn->street->name, street->name) != 0)
+            {
                 int already = 0;
                 for (int j = 0; j < printed_count; j++)
-                    if (strcmp(printed[j], sn->street->name) == 0) { already = 1; break; }
-                if (!already) {
+                    if (strcmp(printed[j], sn->street->name) == 0)
+                    {
+                        already = 1;
+                        break;
+                    }
+                if (!already)
+                {
                     printf("     - %s\n", sn->street->name);
                     strcpy(printed[printed_count++], sn->street->name);
                     found++;
@@ -109,12 +130,16 @@ void find_connected_streets_fast(IntersectionMap *map, Street *street) {
         printf("     (no connected streets found)\n");
 }
 
-void hashmap_free(IntersectionMap *map) {
-    for (int i = 0; i < HASHMAP_SIZE; i++) {
+void hashmap_free(IntersectionMap *map)
+{
+    for (int i = 0; i < HASHMAP_SIZE; i++)
+    {
         HashEntry *entry = map->buckets[i];
-        while (entry != NULL) {
+        while (entry != NULL)
+        {
             StreetNode *sn = entry->streets;
-            while (sn != NULL) {
+            while (sn != NULL)
+            {
                 StreetNode *tmp = sn;
                 sn = sn->next;
                 free(tmp);
@@ -127,17 +152,20 @@ void hashmap_free(IntersectionMap *map) {
     free(map);
 }
 
-static int visited_hash(long long node1_id, long long node2_id) {
+static int visited_hash(long long node1_id, long long node2_id)
+{
     unsigned long long v = (unsigned long long)(node1_id * 31 + node2_id);
     return (int)(v % HASHMAP_SIZE);
 }
 
-Visited_hash *visited_hashmap_create() {
+Visited_hash *visited_hashmap_create()
+{
     Visited_hash *visited = calloc(1, sizeof(Visited_hash));
     return visited;
 }
 
-void visited_hashmap_insert(Visited_hash *visited, Street *street) {
+void visited_hashmap_insert(Visited_hash *visited, Street *street)
+{
     int idx = visited_hash(street->node1_id, street->node2_id);
 
     Visited_entry *entry = malloc(sizeof(Visited_entry));
@@ -148,10 +176,12 @@ void visited_hashmap_insert(Visited_hash *visited, Street *street) {
     visited->buckets[idx] = entry;
 }
 
-int is_visited_hash(Visited_hash *visited, Street *street){
+int is_visited_hash(Visited_hash *visited, Street *street)
+{
     int idx = visited_hash(street->node1_id, street->node2_id);
     Visited_entry *entry = visited->buckets[idx];
-    while (entry != NULL) {
+    while (entry != NULL)
+    {
         if (entry->node1_id == street->node1_id && entry->node2_id == street->node2_id)
             return 1;
         entry = entry->next;
@@ -159,14 +189,17 @@ int is_visited_hash(Visited_hash *visited, Street *street){
     return 0;
 }
 
-void free_visited_hash(Visited_hash *visited){
-    for(int i = 0; i < HASHMAP_SIZE; i++){
+void free_visited_hash(Visited_hash *visited)
+{
+    for (int i = 0; i < HASHMAP_SIZE; i++)
+    {
         Visited_entry *entry = visited->buckets[i];
-        while (entry != NULL) {
-                Visited_entry *tmp = entry;
-                entry = entry->next;
-                free(tmp);
-            }
+        while (entry != NULL)
+        {
+            Visited_entry *tmp = entry;
+            entry = entry->next;
+            free(tmp);
+        }
     }
     free(visited);
 }

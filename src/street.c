@@ -7,57 +7,65 @@
 
 #define SIZE 256
 
-Street* load_streets(char* mapName) {
+Street *load_streets(char *mapName)
+{
     char filename[SIZE];
     sprintf(filename, "maps/%s/streets.txt", mapName);
 
-    FILE* file = fopen(filename, "r");
-    if (file == NULL) return NULL;
+    FILE *file = fopen(filename, "r");
+    if (file == NULL)
+        return NULL;
 
     Street *head = NULL;
     Street temp;
     int skipped = 0;
 
     char line[512];
-    while (fgets(line, sizeof(line), file)) {
+    while (fgets(line, sizeof(line), file))
+    {
 
         int len = strlen(line);
-        while (len > 0 && (line[len-1] == '\n' || line[len-1] == '\r'))
+        while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r'))
             line[--len] = '\0';
 
         if (sscanf(line, "%lld,%lf,%lf,%lld,%lf,%lf,%lf,%255[^\n]",
-                  &temp.node1_id, &temp.lat1, &temp.lon1,
-                  &temp.node2_id, &temp.lat2, &temp.lon2,
-                  &temp.speed, temp.name) == 8) {
+                   &temp.node1_id, &temp.lat1, &temp.lon1,
+                   &temp.node2_id, &temp.lat2, &temp.lon2,
+                   &temp.speed, temp.name) == 8)
+        {
             int nlen = strlen(temp.name);
-            if (nlen > 0 && temp.name[nlen-1] == '\r')
-                temp.name[nlen-1] = '\0';
+            if (nlen > 0 && temp.name[nlen - 1] == '\r')
+                temp.name[nlen - 1] = '\0';
 
             Street *new = malloc(sizeof(Street));
             *new = temp;
             new->next = head;
             head = new;
-        } else {
+        }
+        else
+        {
             skipped++;
         }
     }
-    printf("DEBUG streets: skipped %d malformed lines\n", skipped);
+
     fclose(file);
     return head;
 }
 
-void free_streets(Street *head) {
-    //printf("DEBUG: Inside free_streets\n");
+void free_streets(Street *head)
+{
 
     Street *temp;
-    while (head != NULL) {
+    while (head != NULL)
+    {
         temp = head;
         head = head->next;
         free(temp);
     }
 }
 
-void find_connected_streets(Street *head, Street *closest) {
+void find_connected_streets(Street *head, Street *closest)
+{
     printf("    From this street segment, you can go to:\n");
     printf("    - %s\n", closest->name);
     printf("        Which is connected to:\n");
@@ -74,18 +82,27 @@ void find_connected_streets(Street *head, Street *closest) {
 
     // Expandir: añadir nodos de segmentos contiguos de la misma calle
     Street *seg = head;
-    while (seg != NULL) {
-        if (strcmp(seg->name, closest->name) == 0) {
-            for (int i = 0; i < node_count; i++) {
-                if (seg->node1_id == nodes[i] || seg->node2_id == nodes[i]) {
+    while (seg != NULL)
+    {
+        if (strcmp(seg->name, closest->name) == 0)
+        {
+            for (int i = 0; i < node_count; i++)
+            {
+                if (seg->node1_id == nodes[i] || seg->node2_id == nodes[i])
+                {
                     // Añadir sus nodos si no están ya
                     int found1 = 0, found2 = 0;
-                    for (int j = 0; j < node_count; j++) {
-                        if (nodes[j] == seg->node1_id) found1 = 1;
-                        if (nodes[j] == seg->node2_id) found2 = 1;
+                    for (int j = 0; j < node_count; j++)
+                    {
+                        if (nodes[j] == seg->node1_id)
+                            found1 = 1;
+                        if (nodes[j] == seg->node2_id)
+                            found2 = 1;
                     }
-                    if (!found1 && node_count < 128) nodes[node_count++] = seg->node1_id;
-                    if (!found2 && node_count < 128) nodes[node_count++] = seg->node2_id;
+                    if (!found1 && node_count < 128)
+                        nodes[node_count++] = seg->node1_id;
+                    if (!found2 && node_count < 128)
+                        nodes[node_count++] = seg->node2_id;
                     break;
                 }
             }
@@ -95,14 +112,23 @@ void find_connected_streets(Street *head, Street *closest) {
 
     // Buscar calles conectadas a cualquiera de esos nodos
     Street *current = head;
-    while (current != NULL) {
-        if (strcmp(current->name, closest->name) != 0) {
-            for (int i = 0; i < node_count; i++) {
-                if (current->node1_id == nodes[i] || current->node2_id == nodes[i]) {
+    while (current != NULL)
+    {
+        if (strcmp(current->name, closest->name) != 0)
+        {
+            for (int i = 0; i < node_count; i++)
+            {
+                if (current->node1_id == nodes[i] || current->node2_id == nodes[i])
+                {
                     int already = 0;
                     for (int j = 0; j < seen_count; j++)
-                        if (strcmp(seen[j], current->name) == 0) { already = 1; break; }
-                    if (!already && seen_count < 64) {
+                        if (strcmp(seen[j], current->name) == 0)
+                        {
+                            already = 1;
+                            break;
+                        }
+                    if (!already && seen_count < 64)
+                    {
                         printf("         - %s\n", current->name);
                         strcpy(seen[seen_count++], current->name);
                     }
@@ -114,9 +140,11 @@ void find_connected_streets(Street *head, Street *closest) {
     }
 }
 
-void street_navigation(char *mapName) {
+void street_navigation(char *mapName)
+{
     Street *streets = load_streets(mapName);
-    if (streets == NULL) {
+    if (streets == NULL)
+    {
         printf("Error loading streets.\n");
         return;
     }
@@ -129,7 +157,8 @@ void street_navigation(char *mapName) {
     scanf("%lf", &lon);
 
     Street *closest = find_closest_street(streets, lat, lon);
-    if (closest == NULL) {
+    if (closest == NULL)
+    {
         printf("No street found.\n");
         free_streets(streets);
         return;

@@ -1,19 +1,12 @@
-#include "sample_lib.h"
-#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/stat.h>
 #include <string.h>
 #include "utils.h"
-#include <ctype.h>
 #include "structures.h"
 #include "place.h"
-#define MAPS_SIZE 6 // Define the size of the maps array
-#define SIZE 256
 
 #define MAX_SUGGESTIONS 5
 #define MAX_DISTANCE 5
-
 
 House *load_houses(char *mapName)
 {
@@ -46,7 +39,6 @@ House *load_houses(char *mapName)
     }
   }
 
-  printf("DEBUG houses: skipped %d malformed lines\n", skipped);
   fclose(file);
   return head;
 }
@@ -105,9 +97,12 @@ House *find_house(House *head, char *name, int number)
       }
     }
     size = unique_size;
-    if (number == -1) {
+    if (number == -1)
+    {
       printf("Introduced street number was not an number.\n");
-    } else {
+    }
+    else
+    {
       printf("Introduced street number is %i, and was not found for selected street.\n", number);
     }
     printf("Available numbers are:\n");
@@ -122,9 +117,11 @@ House *find_house(House *head, char *name, int number)
     do
     {
       printf("Try another number:\n");
-      if (scanf("%d", &new_number) != 1) {
+      if (scanf("%d", &new_number) != 1)
+      {
         int c;
-        while ((c = getchar() != '\n' && c != EOF));
+        while ((c = getchar() != '\n' && c != EOF))
+          ;
         new_number = -1;
       }
       printf("choice: %i\n", new_number);
@@ -205,9 +202,11 @@ House *find_house(House *head, char *name, int number)
     do
     {
       printf("Choose (1-%d) or 0 to cancel: \n", sug_count);
-      if (scanf("%d", &choice) != 1) {
+      if (scanf("%d", &choice) != 1)
+      {
         int c;
-        while ((c = getchar() != '\n' && c != EOF));
+        while ((c = getchar() != '\n' && c != EOF))
+          ;
         choice = -1;
       }
       printf("choice: %i\n", choice);
@@ -242,10 +241,12 @@ House *house(House *head)
     printf("Enter street name (e.g. Carrer de Roc Boronat): \n");
     scanf(" %[^\n]", street);
     printf("Enter street number (e.g. 138): \n");
-    if (scanf("%d", &number) != 1) {
+    if (scanf("%d", &number) != 1)
+    {
       int c;
-      while ((c = getchar() != '\n' && c != EOF));
-      number = -1; 
+      while ((c = getchar() != '\n' && c != EOF))
+        ;
+      number = -1;
     }
     normalize(street);
 
@@ -263,7 +264,6 @@ House *house(House *head)
 
 void free_houses(House *head)
 {
-  // printf("DEBUG: Inside free_houses\n");
   House *temp;
   while (head != NULL)
   {

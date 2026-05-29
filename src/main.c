@@ -1,20 +1,14 @@
-#include "sample_lib.h"
-#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/stat.h>
 #include <string.h>
 #include "utils.h"
-#include <ctype.h>
 #include "structures.h"
 #include "hashmap.h"
 #include "bfs.h"
-
 #include "place.h"
 #include "address.h"
 #include "street.h"
 #define MAPS_SIZE 6 // Define the size of the maps array
-#define SIZE 256
 
 // Array of the valid types of maps.
 const char *valid_maps[] = {
@@ -31,7 +25,7 @@ int main()
   printf("*****************\nWelcome to DSA!\n*****************\n");
 
   char *mapName = get_map_name();
-  // printf("%s", mapName);
+
   printf("--- ORIGIN ---\n");
   double lat = 0, lon = 0;
   int opt_origin = get_option();
@@ -45,20 +39,35 @@ int main()
   int house_count = 0, street_count = 0, place_count = 0;
 
   House *hh = houses;
-  while (hh != NULL) { house_count++; hh = hh->next; }
+  while (hh != NULL)
+  {
+    house_count++;
+    hh = hh->next;
+  }
 
   Street *ss = streets;
-  while (ss != NULL) { street_count++; ss = ss->next; }
+  while (ss != NULL)
+  {
+    street_count++;
+    ss = ss->next;
+  }
 
   Place *pp = places;
-  while (pp != NULL) { place_count++; pp = pp->next; }
+  while (pp != NULL)
+  {
+    place_count++;
+    pp = pp->next;
+  }
 
-  printf("DEBUG loaded: %d houses | %d streets | %d places\n",
+  printf("loaded: %d houses | %d streets | %d places\n",
          house_count, street_count, place_count);
 
-  if (houses == NULL)  printf("Warning: no houses loaded\n");
-  if (streets == NULL) printf("Warning: no streets loaded\n");
-  if (places == NULL)  printf("Warning: no places loaded\n");
+  if (houses == NULL)
+    printf("Warning: no houses loaded\n");
+  if (streets == NULL)
+    printf("Warning: no streets loaded\n");
+  if (places == NULL)
+    printf("Warning: no places loaded\n");
 
   // Different cases
   switch (opt_origin)
@@ -84,7 +93,7 @@ int main()
     Place *p = place(places);
     lat = p->latitude;
     lon = p->longitude;
-    printf("Street: %s\n    Found at (%.6f, %.6f)\n", p->name, lat, lon);
+    printf("Place: %s\n    Found at (%.6f, %.6f)\n", p->name, lat, lon);
     break;
   }
   case -1:
@@ -93,26 +102,29 @@ int main()
   }
 
   Street *or_street = NULL;
-  if (streets == NULL) {
-  printf("Error: streets not loaded.\n");
-  } else {
-  Street *closest = find_closest_street(streets, lat, lon);
-  //printf("DEBUG: find_closest_street done\n");  
-    if (closest == NULL) {
+  if (streets == NULL)
+  {
+    printf("Error: streets not loaded.\n");
+  }
+  else
+  {
+    Street *closest = find_closest_street(streets, lat, lon);
+
+    if (closest == NULL)
+    {
       printf("No closest street found.\n");
-    } else {
-      //printf("DEBUG: closest found: %s\n", closest->name);
+    }
+    else
+    {
       printf("    Closest street: %s\n", closest->name);
       printf("    Between %lld (%.6f, %.6f) and %lld (%.6f, %.6f)\n\n",
              closest->node1_id, closest->lat1, closest->lon1,
              closest->node2_id, closest->lat2, closest->lon2);
-      //printf("DEBUG: before find_connected\n");
-      find_connected_streets_fast(imap, closest);  // O(1) lookup
-      //printf("DEBUG: after find_connected\n");
+
+      find_connected_streets_fast(imap, closest); // O(1) lookup
     }
     or_street = closest;
   }
-  
 
   printf("--- DESTINATION ---\n");
   int opt_dest = get_option();
@@ -128,7 +140,6 @@ int main()
     break;
   }
   case 2:
-
     printf("Enter source coordinates:\n");
     printf("    Enter latitude: ");
     scanf("%lf", &lat);
@@ -140,8 +151,7 @@ int main()
     Place *p = place(places);
     lat = p->latitude;
     lon = p->longitude;
-    printf("DEBUG place: %s -> lat=%.6f, lon=%.6f\n", p->name, lat, lon);
-    printf("    Found at (%.6f, %.6f)\n", lat, lon);
+    printf("Place: %s\n     Found at (%.6f, %.6f)\n", p->name, lat, lon);
     break;
   }
   case -1:
@@ -150,40 +160,43 @@ int main()
   }
 
   Street *dest_street = NULL;
-  if (streets == NULL) {
-  printf("Error: streets not loaded.\n");
-  } else {
-  Street *closest = find_closest_street(streets, lat, lon);
-  //printf("DEBUG: find_closest_street done\n");  
-    if (closest == NULL) {
+  if (streets == NULL)
+  {
+    printf("Error: streets not loaded.\n");
+  }
+  else
+  {
+    Street *closest = find_closest_street(streets, lat, lon);
+    if (closest == NULL)
+    {
       printf("No closest street found.\n");
-
-    } else {
-      //printf("DEBUG: closest found: %s\n", closest->name);
+    }
+    else
+    {
       printf("    Closest street: %s\n", closest->name);
       printf("    Between %lld (%.6f, %.6f) and %lld (%.6f, %.6f)\n\n",
              closest->node1_id, closest->lat1, closest->lon1,
              closest->node2_id, closest->lat2, closest->lon2);
-      //printf("DEBUG: before find_connected\n");
-      find_connected_streets_fast(imap, closest);  // O(1) lookup
-      //printf("DEBUG: after find_connected\n");
     }
     dest_street = closest;
-    
   }
 
-  if(or_street == NULL || dest_street == NULL) printf("Error saving origin or destination street");
-  else {
+  if (or_street == NULL || dest_street == NULL)
+    printf("Error saving origin or destination street");
+  else
+  {
     Path_node *node = BFS(imap, or_street, dest_street);
-    if (node == NULL) {
+    if (node == NULL)
+    {
       printf("No route found.\n");
-    } else{
+    }
+    else
+    {
       print_path(node);
       free_path(node);
     }
   }
 
-  //printf("DEBUG: About to free all arrays\n");  
   hashmap_free(imap);
   free_houses(houses);
   free_places(places);
@@ -200,7 +213,6 @@ int get_option()
   do
   {
     option = get_string(16, "How do you want to input the origin position? (address/coordinate/place): ");
-    // printf("%s\n",option);
 
     if (!strcmp(option, "1") || !strcmp(option, "address"))
       opt_value = 1;
@@ -229,7 +241,7 @@ char *get_map_name()
 
     map_name = get_string(8, "Enter map name (xs_1/xs_2/md_1/lg_1/xl_1/2xl_1): ");
     printf("%s\n", map_name);
-    // Will be optimized.
+
     for (int i = 0; i < MAPS_SIZE; i++)
     {
       if (!strcmp(map_name, valid_maps[i]))

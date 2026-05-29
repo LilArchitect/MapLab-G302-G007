@@ -5,7 +5,6 @@
 #include <math.h>
 #include "structures.h"
 #include "utils.h"
-#include "hashmap.h"
 
 // Asks the user for a string
 char *get_string(int size, const char *msg)
@@ -126,7 +125,8 @@ Position midpoint(Position a, Position b)
 
 void latlon_to_xy(double lat_ref, double lon_ref,
                   double lat, double lon,
-                  double *x, double *y) {
+                  double *x, double *y)
+{
     double lat_ref_rad = toRadians(lat_ref);
     double dlat = toRadians(lat - lat_ref);
     double dlon = toRadians(lon - lon_ref);

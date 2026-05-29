@@ -1,14 +1,8 @@
-#include "sample_lib.h"
-#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/stat.h>
 #include <string.h>
 #include "utils.h"
-#include <ctype.h>
 #include "structures.h"
-#define MAPS_SIZE 6 // Define the size of the maps array
-#define SIZE 256
 
 #define MAX_SUGGESTIONS 5
 #define MAX_DISTANCE 5
@@ -45,7 +39,6 @@ Place *load_places(char *mapName)
     }
   }
 
-  printf("DEBUG places: skipped %d malformed lines\n", skipped);
   fclose(file);
   return head;
 }
@@ -70,7 +63,6 @@ Place *find_place(Place *head, char *name)
     normalize(temp);
     get_type_and_strip_prefix(temp);
 
-    // printf("DEBUG comparing: [%s] vs [%s]\n", temp, name);
     if (strcmp(temp, nameStripped) == 0)
       return current;
 
@@ -167,8 +159,6 @@ Place *place(Place *head)
 
 void free_places(Place *head)
 {
-  // printf("DEBUG: Inside free_places\n");
-
   Place *temp;
   while (head != NULL)
   {

@@ -5,7 +5,6 @@
 #include <string.h>
 #include "utils.h"
 
-
 Queue *create_queue()
 {
     return NULL;
@@ -127,8 +126,10 @@ Path_node *add_to_path(Path_node *path, Street *street)
     return new_path;
 }
 
-void free_path(Path_node *path) {
-    while (path != NULL) {
+void free_path(Path_node *path)
+{
+    while (path != NULL)
+    {
         Path_node *temp = path;
         path = path->next;
         free(temp);
@@ -189,7 +190,8 @@ Path_node *BFS(IntersectionMap *map, Street *origin_head, Street *dest_head)
     return NULL;
 }
 
-int turn_direction(Street *ab, Street *bc) {
+int turn_direction(Street *ab, Street *bc)
+{
     double ax, ay, bx, by, cx, cy;
     double lat_ref = ab->lat1;
     double lon_ref = ab->lon1;
@@ -200,15 +202,19 @@ int turn_direction(Street *ab, Street *bc) {
 
     double cross = (bx - ax) * (cy - by) - (by - ay) * (cx - bx);
 
-    if (cross > 0)  return 1;
-    if (cross < 0)  return -1;
+    if (cross > 0)
+        return 1;
+    if (cross < 0)
+        return -1;
     return 0;
 }
 
-void print_path(Path_node *node) {
+void print_path(Path_node *node)
+{
     printf("\n--- ROUTE ---\n");
 
-    if (node == NULL) {
+    if (node == NULL)
+    {
         printf("  No route found.\n");
         return;
     }
@@ -218,28 +224,35 @@ void print_path(Path_node *node) {
     Path_node *prev = node;
     Path_node *curr = node->next;
 
-    while (curr != NULL) {
+    while (curr != NULL)
+    {
         int meters = (int)curr->street->speed;
 
         // Acumular segmentos consecutivos de la misma calle
         while (curr->next != NULL &&
-               strcmp(curr->next->street->name, curr->street->name) == 0) {
+               strcmp(curr->next->street->name, curr->street->name) == 0)
+        {
             curr = curr->next;
             meters += (int)curr->street->speed;
         }
 
-        if (curr->next == NULL) {
+        if (curr->next == NULL)
+        {
             printf("    You have arrived to %s\n", curr->street->name);
-        } else {
+        }
+        else
+        {
             int dir = turn_direction(prev->street, curr->street);
-            //printf("DEBUG before print direction: dir = %d", dir);
-            if(dir == 1) printf("  Turn left to %s and continue for %dm\n", curr->street->name, meters);
-            if(dir == 0) printf("  Continue straight to %s and continue for %dm\n", curr->street->name, meters);
-            if(dir == -1) printf("  Turn right to %s and continue for %dm\n", curr->street->name, meters);
+
+            if (dir == 1)
+                printf("  Turn left to %s and continue for %dm\n", curr->street->name, meters);
+            if (dir == 0)
+                printf("  Continue straight to %s and continue for %dm\n", curr->street->name, meters);
+            if (dir == -1)
+                printf("  Turn right to %s and continue for %dm\n", curr->street->name, meters);
             prev = curr;
         }
 
         curr = curr->next;
     }
 }
-
