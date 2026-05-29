@@ -8,7 +8,7 @@
  * Parses each line expecting the format: street,number,latitude,longitude.
  * Malformed lines are skipped.
  *
- * @param mapName Name of the map directory (e.g. "xs_1").
+ * @param mapName Name of the map directory.
  * @return Head of the House linked list, or NULL if the file cannot be opened.
  * @note The caller is responsible for freeing the list with free_houses().
  */
