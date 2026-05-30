@@ -9,18 +9,24 @@
 #include "address.h"
 #include "street.h"
 #include "time.h"
-#define MAPS_SIZE 6 // Define the size of the maps array
 
-// Array of the valid types of maps.
+/** @brief Number of valid maps available in the system. */
+#define MAPS_SIZE 6
+
+/** @brief List of valid map directory names. */
 const char *valid_maps[] = {
     "xs_1", "xs_2", "md_1", "lg_1", "xl_1", "2xl_1"};
 
-// Functions
 int get_option(void);
 char *get_map_name(void);
 
-//
-
+/**
+ * @brief Entry point of the MapLab application.
+ *
+ * Loads all map data (houses, streets, places), prompts the user to select
+ * an origin and a destination, and computes a path between them using BFS.
+ * 
+ */
 int main()
 {
   printf("*****************\nWelcome to DSA!\n*****************\n");
@@ -34,11 +40,11 @@ int main()
   House *houses = load_houses(mapName);
   Street *streets = load_streets(mapName);
   //runtime
-  time_intersection_map(streets);
+  //time_intersection_map(streets);
   IntersectionMap *imap = build_intersection_map(streets);
   Place *places = load_places(mapName);
 
-  // DEBUG — contar elementos cargados
+  // Count loaded elements and warn if any list is empty
   int house_count = 0, street_count = 0, place_count = 0;
 
   House *hh = houses;
@@ -72,7 +78,7 @@ int main()
   if (places == NULL)
     printf("Warning: no places loaded\n");
 
-  // Different cases
+  // Resolve origin coordinates from user's chosen input method
   switch (opt_origin)
   {
   case 1:
@@ -104,6 +110,7 @@ int main()
     break;
   }
 
+  // Find the street segment closest to the origin coordinates
   Street *or_street = NULL;
   if (streets == NULL)
   {
@@ -124,7 +131,9 @@ int main()
              closest->node1_id, closest->lat1, closest->lon1,
              closest->node2_id, closest->lat2, closest->lon2);
 
-      find_connected_streets_fast(imap, closest); // O(1) lookup
+      //find_connected_streets_fast(imap, closest); // O(1) lookup
+      time_connected_streets(streets, closest); // TIME
+      time_connected_streets_fast(imap, closest); // TIME
     }
     or_street = closest;
   }
@@ -188,6 +197,8 @@ int main()
     printf("Error saving origin or destination street");
   else
   {
+    time_bfs(streets, imap, or_street, dest_street); // TIME
+
     Path_node *node = BFS(imap, or_street, dest_street);
     if (node == NULL)
     {
@@ -209,6 +220,14 @@ int main()
   return 0;
 }
 
+/**
+ * @brief Prompts the user to choose a position input method.
+ *
+ * Accepts either the option number ("1", "2", "3") or its name
+ * ("address", "coordinate", "place"). Loops until a valid option is entered.
+ *
+ * @return 1 for address, 2 for coordinate, 3 for place.
+ */
 int get_option()
 {
   char *option = NULL;
@@ -234,6 +253,15 @@ int get_option()
   return opt_value;
 }
 
+/**
+ * @brief Prompts the user to enter a valid map name.
+ *
+ * Validates the input against the valid_maps array. Loops until
+ * a valid map name is entered.
+ *
+ * @return Heap-allocated string with the map name.
+ * @note The caller is responsible for freeing the returned string.
+ */
 char *get_map_name()
 {
   char *map_name = NULL;

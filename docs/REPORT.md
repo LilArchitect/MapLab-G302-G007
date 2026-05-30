@@ -29,6 +29,50 @@ Overall, the best case would be O(1), when the origin and the destination are ad
     **- Experimentally determine the results by measuring multiple times your program's behaviour with different relevant scenarios in the same machine. Include your raw data in the report, besides the plot.**
 
     **- Explain the results.**
+We have selected 5 random streets for each map:
+    xs_1:
+    C. del Baixant 1
+    Av. Vertical ,1
+    C. Pompeu Fabra ,2
+    Av. Horitzontal ,1
+    C. Pompeu Fabra ,10
+    xs_2:
+    Avinguda Diagonal ,197
+    Rambla del poblenou ,130
+    Carrer de la Llacuna ,118
+    Carrer de Pere IV ,151
+    Carrer dels Solsticis ,3
+    md_1:
+    Carrer de Pujades ,309
+    Carrer de Pamplona ,106
+    Carrer del Clot ,38
+    Passatge de Caminal ,24
+    Carrer d'Àlaba ,146
+    lg_1:
+    Carrer de Pujades ,309
+    Carrer de Sicília ,166
+    Carrer de Flandes ,9
+    Carrer de Pere IV ,47
+    Carrer del Consell de Cent ,426
+    xl_1:
+    Carrer de Ramón y Cajal ,24
+    Passeig dels Til·lers ,19
+    Carrer de Còrsega ,701
+    Carrer de Blasco de Garay ,10
+    Carrer del Marroc ,105
+    2xl_1:
+    Passeig de la Vall d'Hebron ,159
+    Avinguda de Catalunya ,72
+    Carrer de Palaudàries ,12
+    Carrer del Torrent de la Guineu ,116
+    Carrer de Pallars ,445
+To compare the latency, we have applied the time function to connected_streets and connected_streets_fast. Asking for the same street, we compared the time...  
+![alt text](./report_images/raw_data_cs_lab4.png)
+![alt text](./report_images/grafico_cs_lab4.png)
+![alt text](./report_images/raw_data_media_cs_lab4.png)
+![alt text](./report_images/raw_data_csf_lab5.png)
+![alt text](./report_images/raw_data_media_csf_lab5.png)
+![alt text](./report_images/grafico_csf_lab5.png)
 
 **5. A plot comparing the latency to find a path between two points finding connected streets sequentially looking through the list compared to using the intersections map, depending on the map size (but keeping the same origin and destination).**
 
