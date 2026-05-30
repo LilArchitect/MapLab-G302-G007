@@ -148,7 +148,8 @@ The linear map has to go through all the street linked list every time it has to
 ![alt text](./report_images/plot_BFS_dist.png)
 ![alt text](./report_images/raw_data_BFS_linear_dist.png)
 ![alt text](./report_images/plot_BFS__linear_dist.png)
-
+![alt text](./report_images/plot_BFS_dist_curve.png)
+![alt text](./report_images/plot_BFS__linear_dist_curve.png)
 
 **7. Describe an improvement to the visited data structure in the BFS algorithm to improve latency.**
 
