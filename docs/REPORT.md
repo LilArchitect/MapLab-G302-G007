@@ -167,7 +167,7 @@ Then, we made two plots with the calculated results:
 
 ![alt text](./report_images/plot_BFS_dist.png)
 ![alt text](./report_images/plot_BFS_dist_curve.png)
-![alt text](./report_images/plot_BFS__linear_dist_curve.png)
+
 
 
 Both approaches get slower as the distance between origin and destination increases, since the longer path means more distance to explore. Nevertheless, the intersection map is faster across all cases.
@@ -181,6 +181,7 @@ Based on question number 3, the runtime complexity expected is O((v + e)·(n + k
 
 ![alt text](./report_images/plot_BFS__linear_dist.png)
 ![alt text](./report_images/plot_BFS__linear_dist_curve.png)
+
 
 **7. Describe an improvement to the visited data structure in the BFS algorithm to improve latency.**
 
