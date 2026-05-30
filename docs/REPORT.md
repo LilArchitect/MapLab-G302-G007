@@ -1,11 +1,15 @@
 # Report
 
+
+
 **1. Runtime complexity analysis of initializing the intersections map in Big-O. Include the average, best and worst cases if they are different.**
 
 The build intersection map function iterates over the linked list of street segments calling the function hashmap insert twice, for node1_id and for node2_id.
 The runtime complexity of the hashmap insert function is related to the hash function choosen. If it is well-distributed, the load factor will be low so the the average case would be O(1), the best case would be when the bucket is empty beeing also O(1) complexity. The worst scenario would be when lot of keys collide into the same bucket, forcing to go over all the list on every insert, the complexity would become O(n), n beeing the number of streets in the linked list.
 
 Because of build intersection map calls hashmap insert 2n, the best and average case would be O(n): each insert is O(1), so n inserts is O(n). The worst case would be O(n²).
+
+
 
 **2. Runtime complexity analysis of finding the coordinates of a street or place given the name in Big-O. Include the average, best and worst cases if they are different.**
 
@@ -15,6 +19,9 @@ Normalize, get type and strips prefix and levenshtein functions are all string r
 As a result of that, the runtime complexity of finding the coordinates of a street or place given the name is O(n), beeing n the number of places in the linked list. The best case is considered when the fist element on the list is the place that we are looking for, so complexity is O(1), the average case would be when the place is in the middle of the list, it would be O(n). 
 Finally, the worst case would be when the place is not found on the first iteration so the function called place is called recursively again so complexity is O(n) + O(n) = O(2n), which overall is O(n).
 
+
+
+
 **3. Runtime complexity analysis of your path-finding algorithm in Big-O. Include the average, best and worst cases if they are different.**
 
 The path-finding algorithm choosen is BFS which uses a queue in which in each element stores a linked list of the path found since that moment and a hashmap function to know if a street has already been visited.
@@ -23,6 +30,8 @@ The BFS function calls all queue function: enqueue and free queue which have the
 Also calls is visted hash and visted hash map insert which have O(1) complexity and add to path which has a O(k) complexity where k is the current path length.
 
 Overall, the best case would be O(1), when the origin and the destination are adjacents, the average case would be O((v + e)·(n + k)), where v are the number of street segments (vertices) and e the number of connections between them. For each vertice v and each connection e, it executes add to path and enqueue so the complexity for each connection is O(k + n) as these is executed e and v times, it turns O((v + e)·(n + k)). The worst case would be when k + n approach to v so the complexity is O((v + e)· v).
+
+
 
 **4. A plot comparing the latency to find connected streets by sequentially looking through the list (lab 4) compared to using the intersections map (lab 5), depending on the map size.**
 
@@ -93,6 +102,7 @@ The sequential approach find_connected_streets gets slower as the size of the ma
 The intersection map find_connected_streets_fast whereas the sequential approach grows, this approach takes almost the same amount of time in the smallest map than in the longest map. The first one with 34860.2 ns and the last one with 45804 ns which is a difference of 10943.8 ns. As we can see there is a huge difference between the sequential approach and the hashmap. 
 
 
+
 **5. A plot comparing the latency to find a path between two points finding connected streets sequentially looking through the list compared to using the intersections map, depending on the map size (but keeping the same origin and destination).**
 
 **- Experimentally determine the results by measuring multiple times your program's behaviour with different relevant scenarios in the same machine. Include your raw data in the report, besides the plot.**
@@ -136,6 +146,7 @@ As we can see, with the 2 smallest maps (xs_1, xs_2), the linear search is sligh
 The linear map has to go through all the street linked list every time it has to look for a connected street while the intersection map has the connections already stored so it finds them faster.
 
 
+
 **6. A plot comparing the latency to find a path between two points finding connected streets sequentially looking through the list compared to using the intersections map, depending on the distance between the origin and destination (but using the same map).**
 
 **- Experimentally determine the results by measuring multiple times your program's behaviour with different relevant scenarios in the same machine. Include your raw data in the report, besides the plot.**
@@ -144,10 +155,28 @@ The linear map has to go through all the street linked list every time it has to
 
 **- Fit a curve and justify it based on the runtime complexity from question 3.**
 
-![alt text](./report_images/raw_data_BFS_dist.png)
-![alt text](./report_images/plot_BFS_dist.png)
+We followed the same procedure as the question 4 and 5, this time choosing 10 routes taken on the same map (lg_1), and writing the results on two separated charts, one for the BFS linear search and the other for the BFS with hashmap as it is shown in the images below.
+
+
 ![alt text](./report_images/raw_data_BFS_linear_dist.png)
+![alt text](./report_images/raw_data_BFS_dist.png)
+
+
+Then, we made two plots with the calculated results:
+
+
+![alt text](./report_images/plot_BFS_dist.png)
 ![alt text](./report_images/plot_BFS__linear_dist.png)
+
+
+Both approaches get slower as the distance between origin and destination increases, since the longer path means more distance to explore. Nevertheless, the intersection map is faster across all cases.
+
+We can see that some short distances take more time than some longer ones because in meters does not directly determine how many streets are explored: a short path could go through more streets than in a longer path.
+
+As always, the difference in time execution between linear search and the intersection map is because in linear search it goes through all the linked list to find the connected streets while using hasmap search fins connected streets directly using the intersection map.
+
+Based on question number 3, the runtime complexity expected is O((v + e)·(n + k)) on average, where n is the size of the queue and k is the current path length. Both n and k grow as more streets are explored and also does the distance between 2 streets. As a result of that, we can expect that the curve that fits is similar to a quadratic function. In the plot is shown that it does not follow a straight line but curves upwards.
+
 
 
 **7. Describe an improvement to the visited data structure in the BFS algorithm to improve latency.**
@@ -168,6 +197,8 @@ In our code, the linked-list implementation takes O(V^2), where V are the visite
 
 The trade-offs of doing this is that, even if the latency is better with the hash table it doesn't has a dynamic memory like the linked list so it may not be as memory efficient. For this reason, with maps like xs_1 or xs_2, the BFS_linear algorithm is somewhere better than the BFS with the hash tables.
 
+
+
 **8. Describe an improvement to the algorithm to find the street segment given a latitude and longitude to improve its runtime complexity / latency.**
 
 **- Justify which data structure or algorithm you would use / have used to improve latency.**
@@ -181,5 +212,3 @@ Its current implementation uses find_closest_street() function which iterates ov
 We did not found an specific data structure that beats the one we have implemented between the ones we have studied this course, but we believe a possible improvement could be implementing a KD-tree to index street segments based on their latitude and longitude. The inconvinient may be that creating this tree could cost O(nlog(n)), but every search of an especific longitude and a latitude will result on an average O(logn), which is better in the long run compared to what we have, O(n) por each search.
 
 Implementing this new data structure would be more complex than implementing a linear search.
-
-
