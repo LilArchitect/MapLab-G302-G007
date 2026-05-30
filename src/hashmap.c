@@ -3,6 +3,13 @@
 #include "hashmap.h"
 #include <string.h>
 
+
+/**
+ * @brief Hash function
+ *
+ * @param node_id Node ID to hash.
+ * @return Bucket index in [0, HASHMAP_SIZE).
+ */
 static int hash(long long node_id)
 {
     unsigned long long v = (unsigned long long)node_id;
@@ -152,6 +159,14 @@ void hashmap_free(IntersectionMap *map)
     free(map);
 }
 
+
+/**
+ * @brief Hash function for visited street segments.
+ *
+ * @param node1_id Start node ID of the street segment.
+ * @param node2_id End node ID of the street segment.
+ * @return Bucket index in [0, HASHMAP_SIZE).
+ */
 static int visited_hash(long long node1_id, long long node2_id)
 {
     unsigned long long v = (unsigned long long)(node1_id * 31 + node2_id);
