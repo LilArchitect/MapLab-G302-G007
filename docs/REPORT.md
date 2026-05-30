@@ -30,7 +30,7 @@ Overall, the best case would be O(1), when the origin and the destination are ad
 
 **Explain the results.**
 
-#### Raw data:
+### Raw data:
 We have selected 5 random streets for each map:
 | Map | Street | Number |
 |-----|--------|--------|
@@ -66,15 +66,31 @@ We have selected 5 random streets for each map:
 | | Carrer de Pallars | 445 |
 
 
-To compare the latency, we have applied the time function to connected_streets and connected_streets_fast. Asking for the same street, we compared the time
+To compare the latency, we have applied the time function to connected_streets and connected_streets_fast. Asking for the same street, we compared the time of execution of 5 different streets from each map and we wrote down the time results on two separated charts, one for lab 4 results and the other for lab 5, as it is shown in the following images:
  
 
 ![alt text](./report_images/raw_data_cs_lab4.png)
-![alt text](./report_images/plot_cs_lab4.png)
-![alt text](./report_images/raw_data_media_cs_lab4.png)
 ![alt text](./report_images/raw_data_csf_lab5.png)
+
+
+When we had mesured all the times, we calculated the average time execution for each map. The same as before, we did a two separated charts with the results:
+
+
+![alt text](./report_images/raw_data_media_cs_lab4.png)
 ![alt text](./report_images/raw_data_media_csf_lab5.png)
+
+
+Finally we made two plots with the results calculated:
+
+![alt text](./report_images/plot_cs_lab4.png)
 ![alt text](./report_images/plot_csf_lab5.png)
+
+
+In these two plots we can see a clear difference between the two labs. 
+The sequential approach find_connected_streets gets slower as the size of the map grows, because it has to search among all streets to find it. With the smaller map, it takes around 68820 ns and 7130475 ns for the longest, which is a difference of 7061655 ns.
+
+The intersection map find_connected_streets_fast whereas the sequential approach grows, this approach takes almost the same amount of time in the smallest map than in the longest map. The first one with 34860.2 ns and the last one with 45804 ns which is a difference of 10943.8 ns. As we can see there is a huge difference between the sequential approach and the hashmap. 
+
 
 **5. A plot comparing the latency to find a path between two points finding connected streets sequentially looking through the list compared to using the intersections map, depending on the map size (but keeping the same origin and destination).**
 
