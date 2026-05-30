@@ -41,4 +41,6 @@ void time_connected_streets_fast(IntersectionMap *map, Street *closest);
  * @see BFS_linear()
  */
 void time_bfs(Street *all_streets, IntersectionMap *imap, Street *origin, Street *dest);
+
+void time_bfs_by_distance(Street *all_streets, IntersectionMap *imap, Street *origin, Street *dest);
 #endif
