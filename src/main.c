@@ -131,9 +131,9 @@ int main()
              closest->node1_id, closest->lat1, closest->lon1,
              closest->node2_id, closest->lat2, closest->lon2);
 
-      //find_connected_streets_fast(imap, closest); // O(1) lookup
-      time_connected_streets(streets, closest); // TIME
-      time_connected_streets_fast(imap, closest); // TIME
+      find_connected_streets_fast(imap, closest); // O(1) lookup
+      // time_connected_streets(streets, closest); // TIME
+      // time_connected_streets_fast(imap, closest); // TIME
     }
     or_street = closest;
   }
@@ -197,7 +197,7 @@ int main()
     printf("Error saving origin or destination street");
   else
   {
-    time_bfs(streets, imap, or_street, dest_street); // TIME
+    //time_bfs(streets, imap, or_street, dest_street); // TIME
 
     Path_node *node = BFS(imap, or_street, dest_street);
     if (node == NULL)
