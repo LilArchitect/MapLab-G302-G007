@@ -8,6 +8,7 @@
 #include "place.h"
 #include "address.h"
 #include "street.h"
+#include "time.h"
 
 /** @brief Number of valid maps available in the system. */
 #define MAPS_SIZE 6
@@ -38,6 +39,8 @@ int main()
 
   House *houses = load_houses(mapName);
   Street *streets = load_streets(mapName);
+  //runtime
+  time_intersection_map(streets);
   IntersectionMap *imap = build_intersection_map(streets);
   Place *places = load_places(mapName);
 
