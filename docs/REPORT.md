@@ -142,9 +142,13 @@ The linear map has to go through all the street linked list every time it has to
 
 **- Explain the results.**
 
-
-
 **- Fit a curve and justify it based on the runtime complexity from question 3.**
+
+![alt text](./report_images/raw_data_BFS_dist.png)
+![alt text](./report_images/plot_BFS_dist.png)
+![alt text](./report_images/raw_data_BFS_linear_dist.png)
+![alt text](./report_images/plot_BFS__linear_dist.png)
+
 
 **7. Describe an improvement to the visited data structure in the BFS algorithm to improve latency.**
 
