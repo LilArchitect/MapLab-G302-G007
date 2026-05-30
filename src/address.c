@@ -28,7 +28,6 @@ House *load_houses(char *mapName)
 
   House *head = NULL;
   House temp;
-  int skipped = 0;
 
   char line[512];
   while (fgets(line, sizeof(line), file))
@@ -41,10 +40,6 @@ House *load_houses(char *mapName)
       *new = temp;
       new->next = head;
       head = new;
-    }
-    else
-    {
-      skipped++;
     }
   }
 
