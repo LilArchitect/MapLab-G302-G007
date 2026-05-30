@@ -173,6 +173,8 @@ The trade-offs of doing this is that, even if the latency is better with the has
 
 Its current implementation uses find_closest_street() function which iterates over every street segment in the list, which makes it O(n), where n is the number of streets in a map.
 
-We did not found an specific data structure that beats the one we have implemented between the ones we have studied this course, but we believe a possible improvement could be implementing a KD-tree to index street segments based on their latitude and longitude. The inconvinient may be that creating this tree could cost O(nlog(n)), but every search of an especific longitude and a latitude will result on an average O(logn), which is better in the long run.
+We did not found an specific data structure that beats the one we have implemented between the ones we have studied this course, but we believe a possible improvement could be implementing a KD-tree to index street segments based on their latitude and longitude. The inconvinient may be that creating this tree could cost O(nlog(n)), but every search of an especific longitude and a latitude will result on an average O(logn), which is better in the long run compared to what we have, O(n) por each search.
+
+Implementing this new data structure would be more complex than implementing a linear search.
 
 
