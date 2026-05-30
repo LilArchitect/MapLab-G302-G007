@@ -4,7 +4,10 @@
 #include "utils.h"
 #include "structures.h"
 
+/** @brief Maximum number of place name suggestions shown to the user. */
 #define MAX_SUGGESTIONS 5
+
+/** @brief Maximum Levenshtein distance to consider a suggestion valid. */
 #define MAX_DISTANCE 5
 
 Place *load_places(char *mapName)
@@ -66,7 +69,6 @@ Place *find_place(Place *head, char *name)
     if (strcmp(temp, nameStripped) == 0)
       return current;
 
-    // Evitar duplicados
     int already = 0;
     for (int i = 0; i < sug_count; i++)
     {
@@ -93,7 +95,6 @@ Place *find_place(Place *head, char *name)
       }
       else
       {
-        // Reemplazar la peor sugerencia si esta es mejor
         int worst = 0;
         for (int i = 1; i < MAX_SUGGESTIONS; i++)
           if (distances[i] > distances[worst])

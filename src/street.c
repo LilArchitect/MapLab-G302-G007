@@ -73,14 +73,12 @@ void find_connected_streets(Street *head, Street *closest)
     char seen[64][SIZE];
     int seen_count = 0;
 
-    // Primero recogemos todos los nodos de los segmentos de la misma calle
-    // que toquen con el segmento más cercano
+    // Collect all nodes from contiguous segments of the same street
     long long nodes[128];
     int node_count = 0;
     nodes[node_count++] = closest->node1_id;
     nodes[node_count++] = closest->node2_id;
 
-    // Expandir: añadir nodos de segmentos contiguos de la misma calle
     Street *seg = head;
     while (seg != NULL)
     {
@@ -110,7 +108,7 @@ void find_connected_streets(Street *head, Street *closest)
         seg = seg->next;
     }
 
-    // Buscar calles conectadas a cualquiera de esos nodos
+    // Find all streets sharing any of the collected nodes
     Street *current = head;
     while (current != NULL)
     {
