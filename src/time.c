@@ -9,7 +9,9 @@
 #include "address.h"
 #include "street.h"
 #include <time.h>
-#define MAPS_SIZE 6 // Define the size of the maps array
+
+/** @brief Number of valid maps available in the system. */
+#define MAPS_SIZE 6
 
 // question 1: runtime of initializing the intersections map
 
