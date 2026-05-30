@@ -128,7 +128,6 @@ House *find_house(House *head, char *name, int number)
           ;
         new_number = -1;
       }
-      printf("choice: %i\n", new_number);
       for (int i = 0; i < size; i++)
       {
         if (new_number == doors[i])
@@ -211,7 +210,6 @@ House *find_house(House *head, char *name, int number)
           ;
         choice = -1;
       }
-      printf("choice: %i\n", choice);
     } while (choice < 0 || choice > sug_count);
 
     if (choice > 0)
