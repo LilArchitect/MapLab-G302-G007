@@ -256,3 +256,58 @@ void print_path(Path_node *node)
         curr = curr->next;
     }
 }
+
+Path_node *BFS_linear(Street *streets, Street *origin, Street *dest)
+{
+    Queue *Q = create_queue();
+    Path_node *initial_path = malloc(sizeof(Path_node));
+
+    if (initial_path == NULL)
+        return NULL;
+
+    initial_path->street = origin;
+    initial_path->next = NULL;
+    Q = enqueue(Q, initial_path);
+
+    Visited_node *visited = NULL;
+
+    while (!queue_is_empty(Q))
+    {
+        Path_node *path = dequeue(&Q);
+        Path_node *temp = path;
+        while (temp->next != NULL)
+            temp = temp->next;
+        Street *current_street = temp->street;
+
+        if (current_street->node1_id == dest->node1_id ||
+            current_street->node2_id == dest->node1_id ||
+            current_street->node1_id == dest->node2_id ||
+            current_street->node2_id == dest->node2_id)
+        {
+            free_visited(visited);
+            free_queue(Q);
+            return path;
+        }
+
+        if (!is_visited(visited, current_street))
+        {
+            visited = add_visited(visited, current_street);
+
+            Street *s = streets;
+            while (s != NULL)
+            {
+                if ((s->node1_id == current_street->node2_id ||
+                     s->node2_id == current_street->node2_id) &&
+                    !is_visited(visited, s))
+                {
+                    Path_node *new_path = add_to_path(path, s);
+                    Q = enqueue(Q, new_path);
+                }
+                s = s->next;
+            }
+        }
+        free_path(path);
+    }
+    free_visited(visited);
+    return NULL;
+}

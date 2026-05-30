@@ -15,4 +15,5 @@ void free_path(Path_node *path);
 Path_node *BFS(IntersectionMap *map, Street *origin_head, Street *dest_head);
 int turn_direction(Street *ab, Street *bc);
 void print_path(Path_node *node);
+Path_node *BFS_linear(Street *streets, Street *origin, Street *dest);
 #endif
