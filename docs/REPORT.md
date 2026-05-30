@@ -119,6 +119,16 @@ The intersection map find_connected_streets_fast whereas the sequential approach
 
 **Describe any trade-offs or downsides of your approach regarding latency or memory usage.**
 
+We used a hash table for the visited nodes because we already had a hashmap implementation available and only needed to adapt it to store visited streets.
+
+With the original linked-list implementation, inserting a visited node takes O(1) time. However, checking whether a street has already been visited requires traversing the list, which takes O(n) time in the worst case, where n is the number of visited streets.
+
+With a hash table, both insertion and lookup operations become O(1) on average. This is because a hash function is used to compute an index (key) that directly maps a street to a specific bucket in the table. Then it goes through all the nodes that are on that bucket to see if the node have been visited. In the worst case scenario that takes O(k) time, where k is the number of visited nodes in that bucket, but in average that should thake O(1) time if the implemented hash function is good.
+
+In our code, the linked-list implementation takes O(V^2), where V are the visited streets, because the function is_visited() has to go through all the list in the worst case scenario and to implement this in the BFS function we call it V times. However, the improved code use is_visited_hash() instead of is_visited(), which has a big-O complexity of O(1) because of the hash. Then the function is called V times so the excecution time becomes O(V).
+
+The trade-offs of doing this is that, even if the latency is better with the hash table it doesn't has a dynamic memory like the linked list so it may not be as memory efficient. For this reason, with maps like xs_1 or xs_2, the BFS_linear algorithm is somewhere better than the BFS with the hash tables.
+
 **8. Describe an improvement to the algorithm to find the street segment given a latitude and longitude to improve its runtime complexity / latency.**
 
 **Justify which data structure or algorithm you would use / have used to improve latency.**
