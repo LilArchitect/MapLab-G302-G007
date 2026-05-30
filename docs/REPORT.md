@@ -30,8 +30,9 @@ Overall, the best case would be O(1), when the origin and the destination are ad
 
 **Explain the results.**
 
-### Raw data:
+### Test cases:
 We have selected 5 random streets for each map:
+
 | Map | Street | Number |
 |-----|--------|--------|
 | **xs_1** | C. del Baixant | 1 |
@@ -80,7 +81,7 @@ When we had mesured all the times, we calculated the average time execution for 
 ![alt text](./report_images/raw_data_media_csf_lab5.png)
 
 
-Finally we made two plots with the results calculated:
+Finally we made two plots with the calculated results:
 
 ![alt text](./report_images/plot_cs_lab4.png)
 ![alt text](./report_images/plot_csf_lab5.png)
@@ -98,10 +99,42 @@ The intersection map find_connected_streets_fast whereas the sequential approach
 
 **Explain the results.**
 
+### Test Cases:
+We have selected a random path for each map:
+
+| Map | | Street | Number |
+|-----|-|--------|--------|
+| **xs_1** | Origin | C. del Baixant | 1 |
+| | Destination | Av. Horitzontal | 24 |
+| **xs_2** | Origin | Avinguda Diagonal | 197 |
+| | Destination | Rambla del Poblenou | 130 |
+| **md_1** | Origin | Carrer de Pujades | 309 |
+| | Destination | Carrer de Pamplona | 106 |
+| **lg_1** | Origin | Carrer de Pujades | 309 |
+| | Destination | Carrer de Sicília | 166 |
+| **xl_1** | Origin | Carrer de Ramón y Cajal | 24 |
+| | Destination | Passeig dels Til·lers | 19 |
+| **2xl_1** | Origin | Passeig de la Vall d'Hebron | 159 |
+| | Destination | Avinguda de Catalunya | 72 |
+
+
+We followed the same procedure as the question 4, this time choosing a random path for each map, and writing the results on two separated charts, one for the linear search and the other for the hashmap as it is shown in the images below.
+
 ![alt text](./report_images/raw_data_bfs_linear.png)
 ![alt text](./report_images/raw_data_bfs_hash.png)
+
+
+Then, we made two plots with the calculated results:
+
+
 ![alt text](./report_images/plot_bfs_linear.png)
 ![alt text](./report_images/plot_bfs_hash.png)
+
+
+As we can see, with the 2 smallest maps (xs_1, xs_2), the linear search is slightly faster than the hashmap, but when the map gets bigger, the intersection map becomes much faster, there is a huge difference, even the largest map with hash search is around 10 times smaller than the fifth map of the linear search.
+
+The linear map has to go through all the street linked list every time it has to look for a connected street while the intersection map has the connections already stored so it finds them faster.
+
 
 **6. A plot comparing the latency to find a path between two points finding connected streets sequentially looking through the list compared to using the intersections map, depending on the distance between the origin and destination (but using the same map).**
 
