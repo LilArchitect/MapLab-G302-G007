@@ -228,7 +228,6 @@ void print_path(Path_node *node)
     {
         int meters = (int)curr->street->speed;
 
-        // Acumular segmentos consecutivos de la misma calle
         while (curr->next != NULL &&
                strcmp(curr->next->street->name, curr->street->name) == 0)
         {
