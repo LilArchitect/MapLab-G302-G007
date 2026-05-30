@@ -1,4 +1,4 @@
-## Report
+# Report
 
 **1. Runtime complexity analysis of initializing the intersections map in Big-O. Include the average, best and worst cases if they are different.**
 
