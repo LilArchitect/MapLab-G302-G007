@@ -21,7 +21,6 @@ Place *load_places(char *mapName)
 
   Place *head = NULL;
   Place temp;
-  int skipped = 0;
 
   char line[512];
   while (fgets(line, sizeof(line), file))
@@ -35,10 +34,6 @@ Place *load_places(char *mapName)
       *new = temp;
       new->next = head;
       head = new;
-    }
-    else
-    {
-      skipped++;
     }
   }
 

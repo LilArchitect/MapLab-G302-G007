@@ -18,7 +18,6 @@ Street *load_streets(char *mapName)
 
     Street *head = NULL;
     Street temp;
-    int skipped = 0;
 
     char line[512];
     while (fgets(line, sizeof(line), file))
@@ -41,10 +40,6 @@ Street *load_streets(char *mapName)
             *new = temp;
             new->next = head;
             head = new;
-        }
-        else
-        {
-            skipped++;
         }
     }
 
