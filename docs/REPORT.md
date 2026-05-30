@@ -70,17 +70,22 @@ To compare the latency, we have applied the time function to connected_streets a
  
 
 ![alt text](./report_images/raw_data_cs_lab4.png)
-![alt text](./report_images/grafico_cs_lab4.png)
+![alt text](./report_images/plot_cs_lab4.png)
 ![alt text](./report_images/raw_data_media_cs_lab4.png)
 ![alt text](./report_images/raw_data_csf_lab5.png)
 ![alt text](./report_images/raw_data_media_csf_lab5.png)
-![alt text](./report_images/grafico_csf_lab5.png)
+![alt text](./report_images/plot_csf_lab5.png)
 
 **5. A plot comparing the latency to find a path between two points finding connected streets sequentially looking through the list compared to using the intersections map, depending on the map size (but keeping the same origin and destination).**
 
 **Experimentally determine the results by measuring multiple times your program's behaviour with different relevant scenarios in the same machine. Include your raw data in the report, besides the plot.**
 
 **Explain the results.**
+
+![alt text](./report_images/raw_data_bfs_linear.png)
+![alt text](./report_images/raw_data_bfs_hash.png)
+![alt text](./report_images/plot_bfs_linear.png)
+![alt text](./report_images/plot_bfs_hash.png)
 
 **6. A plot comparing the latency to find a path between two points finding connected streets sequentially looking through the list compared to using the intersections map, depending on the distance between the origin and destination (but using the same map).**
 
