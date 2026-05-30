@@ -60,6 +60,11 @@ void time_bfs(Street *all_streets, IntersectionMap *imap, Street *origin, Street
     struct timespec start, end;
     int RUNS = 5;
 
+    Position o = {origin->lat1, origin->lon1};
+    Position d = {dest->lat1, dest->lon1};
+    double dist_m = haversine(o, d) * 1000;
+    printf("Distance between origin and destination: %.3f m\n", dist_m);
+
     long long total_linear = 0;
     for (int i = 0; i < RUNS; i++) {
         clock_gettime(CLOCK_MONOTONIC, &start);
